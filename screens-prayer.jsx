@@ -65,11 +65,6 @@ function ScreenPrayerList() {
     { day: '월', time: '오전', members: 12, done: '9/12', rate: '75%', status: '참여중' },
     { day: '목', time: '오후', members: 10, done: '승인 대기', rate: '-', status: '승인 대기' },
   ];
-  const roomState = {
-    '월-오전': '참여중',
-    '목-오후': '승인 대기',
-    '토-오후': '마감',
-  };
 
   return (
     <Phone>
@@ -88,32 +83,6 @@ function ScreenPrayerList() {
       </div>
 
       <div className="phone-body" style={{ paddingBottom: 96 }}>
-        <div style={{ padding: '0 18px 14px' }}>
-          <div className="card" style={{
-            padding: 16,
-            background: 'var(--app-primary-soft)',
-            border: '1px solid rgba(91,122,176,0.16)',
-            boxShadow: 'none',
-          }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, alignItems: 'center' }}>
-              <div>
-                <div style={{ fontSize: 'calc(16px * var(--app-fs-scale))', fontWeight: 850 }}>고정 기도방 12개</div>
-                <div className="t-sm" style={{ marginTop: 4, color: 'var(--app-primary-deep)' }}>월-토 오전/오후 중 하나를 신청해요</div>
-              </div>
-              <div style={{
-                width: 48,
-                height: 48,
-                borderRadius: '50%',
-                background: '#fff',
-                color: 'var(--app-primary)',
-                display: 'grid',
-                placeItems: 'center',
-                flexShrink: 0,
-              }}>{Icon.hands(24)}</div>
-            </div>
-          </div>
-        </div>
-
         <Section title="내 기도방">
           <div style={{ padding: '0 18px', display: 'flex', flexDirection: 'column', gap: 10 }}>
             {joined.map((room, i) => (
@@ -134,29 +103,36 @@ function ScreenPrayerList() {
           </div>
         </Section>
 
-        <Section title="기도방 신청">
-          <div style={{ padding: '0 18px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 9 }}>
-            {PRAYER_ROOMS.map((room, i) => {
-              const key = `${room.day}-${room.time}`;
-              const state = roomState[key] || '신청 가능';
-              const disabled = state !== '신청 가능';
-              return (
-                <div key={i} className="card" style={{
-                  padding: 12,
-                  boxShadow: 'none',
-                  opacity: state === '마감' ? 0.58 : 1,
-                  border: disabled ? '1px solid var(--app-line)' : '1px solid rgba(91,122,176,0.24)',
-                }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
-                    <PrayerDayBadge day={room.day} time={room.time} size={38} />
-                    <div style={{ minWidth: 0 }}>
-                      <div style={{ fontWeight: 800, fontSize: 'calc(13px * var(--app-fs-scale))' }}>{room.day}요일 {room.time}</div>
-                      <div className="t-xs" style={{ marginTop: 2 }}>{state}</div>
-                    </div>
+        <Section title="중보기도 신청">
+          <div style={{ padding: '0 18px' }}>
+            <div className="card" style={{
+              padding: 16,
+              border: '1px solid rgba(91,122,176,0.22)',
+              boxShadow: '0 1px 3px rgba(20,30,18,0.05)',
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                <div style={{
+                  width: 48,
+                  height: 48,
+                  borderRadius: 16,
+                  background: 'var(--app-primary-soft)',
+                  color: 'var(--app-primary-deep)',
+                  display: 'grid',
+                  placeItems: 'center',
+                  flexShrink: 0,
+                }}>{Icon.hands(24)}</div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontWeight: 850, fontSize: 'calc(15px * var(--app-fs-scale))' }}>중보기도 신청</div>
+                  <div className="t-sm" style={{ marginTop: 5, lineHeight: 1.45 }}>
+                    월-토 오전/오후 기도방은 신청 화면에서 선택해요.
                   </div>
                 </div>
-              );
-            })}
+                {Icon.chevron(18)}
+              </div>
+              <button className="btn btn-primary" style={{ width: '100%', height: 46, marginTop: 14 }}>
+                신청하기
+              </button>
+            </div>
           </div>
         </Section>
       </div>

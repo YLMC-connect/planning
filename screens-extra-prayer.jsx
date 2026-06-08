@@ -53,18 +53,15 @@ function ScreenPrayerApply() {
 
           <div className="card" style={{ padding: 15, display: 'flex', flexDirection: 'column', gap: 12 }}>
             <div style={{ fontWeight: 850, fontSize: 'calc(15px * var(--app-fs-scale))' }}>신청자 정보</div>
-            <div>
-              <div className="t-sm" style={{ marginBottom: 6, fontWeight: 600 }}>이름</div>
+            <FormField label="이름">
               <input className="input" defaultValue="김은혜" />
-            </div>
-            <div>
-              <div className="t-sm" style={{ marginBottom: 6, fontWeight: 600 }}>연락처</div>
+            </FormField>
+            <FormField label="연락처">
               <input className="input" defaultValue="010-1234-5678" />
-            </div>
-            <div>
-              <div className="t-sm" style={{ marginBottom: 6, fontWeight: 600 }}>신청 메모</div>
+            </FormField>
+            <FormField label="신청 메모">
               <textarea className="input" rows={3} placeholder="기도방 참여를 희망하는 이유를 적어주세요" style={{ resize: 'none', fontFamily: 'inherit' }} />
-            </div>
+            </FormField>
           </div>
 
           <div style={{

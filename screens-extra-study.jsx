@@ -18,36 +18,30 @@ function ScreenStudyApply() {
         </div>
 
         <div style={{ display:'flex', flexDirection:'column', gap: 20 }}>
-          <div>
-            <div className="t-sm" style={{ marginBottom: 6, fontWeight: 600, color:'var(--app-ink-soft)' }}>이름</div>
+          <FormField label="이름">
             <input className="input" defaultValue="김은혜"/>
-          </div>
+          </FormField>
           <div style={{ display:'flex', gap: 12 }}>
-            <div style={{ flex: 1 }}>
-              <div className="t-sm" style={{ marginBottom: 6, fontWeight: 600, color:'var(--app-ink-soft)' }}>연락처</div>
+            <FormField label="연락처" style={{ flex: 1 }}>
               <input className="input" defaultValue="010-1234-5678"/>
-            </div>
-            <div style={{ flex: 1 }}>
-              <div className="t-sm" style={{ marginBottom: 6, fontWeight: 600, color:'var(--app-ink-soft)' }}>생년</div>
+            </FormField>
+            <FormField label="생년" style={{ flex: 1 }}>
               <input className="input" defaultValue="1988"/>
-            </div>
+            </FormField>
           </div>
-          <div>
-            <div className="t-sm" style={{ marginBottom: 6, fontWeight: 600, color:'var(--app-ink-soft)' }}>소속 부서</div>
+          <FormField label="소속 부서">
             <input className="input" placeholder="예) 4부 청장년부"/>
-          </div>
-          <div>
-            <div className="t-sm" style={{ marginBottom: 6, fontWeight: 600, color:'var(--app-ink-soft)' }}>신앙 연차</div>
+          </FormField>
+          <FormField label="신앙 연차">
             <div style={{ display:'flex', gap: 6, flexWrap:'wrap' }}>
               {['1년 미만','1-3년','3-5년','5-10년','10년 이상'].map((c,i) => (
                 <div key={i} className={'chip' + (i===3 ? ' on' : '')}>{c}</div>
               ))}
             </div>
-          </div>
-          <div>
-            <div className="t-sm" style={{ marginBottom: 6, fontWeight: 600, color:'var(--app-ink-soft)' }}>신청 동기</div>
+          </FormField>
+          <FormField label="신청 동기">
             <textarea className="input" rows={4} placeholder="신청하시는 이유를 자유롭게 적어주세요" style={{ resize:'none', fontFamily:'inherit' }}/>
-          </div>
+          </FormField>
           <div style={{
             padding: 14, borderRadius:'var(--app-r-m)',
             background:'var(--app-surface)', border:'1px solid var(--app-line)',
