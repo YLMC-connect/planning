@@ -1,0 +1,181 @@
+/* ============================================================
+   Halo — Design Tokens
+   Light-first glassmorphism design system for fintech mini-apps.
+   ============================================================ */
+
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css');
+
+:root {
+  /* ---------- Brand ---------- */
+  /* ---------- Brand (Sage) ---------- */
+  --halo-coral:        #8FA882;       /* Primary accent: sage green */
+  --halo-coral-deep:   #6B8260;       /* Deep sage (pressed / text) */
+  --halo-amber:        #B5C4A4;       /* Secondary: light sage (gradient end) */
+  --halo-amber-deep:   #506B47;       /* Forest sage */
+  --halo-violet:       #C7B89D;       /* Tertiary: warm taupe */
+  --halo-mint:         #9FBFA0;       /* Positive */
+  --halo-rose:         #C97C6E;       /* Danger / negative — terracotta */
+
+  /* ---------- Surfaces ---------- */
+  --halo-bg:           #F5F6F2;          /* page — warm off-white */
+  --halo-bg-warm:      #F2F4EE;          /* alternate page — sage-tinted */
+  --halo-surface:      #FFFFFF;          /* cards */
+  --halo-surface-2:    #FAFBF7;          /* nested / muted card */
+  --halo-surface-tint: #EEF2E8;          /* sage-tinted card */
+
+  /* Page background. Plain solid for a clean fintech feel. */
+  --halo-mesh: var(--halo-bg);
+
+  /* ---------- Glass / sheet surfaces (kept for nav and toast) ---------- */
+  --halo-glass-1:        rgba(255, 255, 255, 0.78);
+  --halo-glass-2:        rgba(255, 255, 255, 0.88);
+  --halo-glass-3:        rgba(255, 255, 255, 0.94);
+  --halo-glass-tint:     rgba(143, 168, 130, 0.08);
+  --halo-glass-border:   rgba(255, 255, 255, 0.65);
+  --halo-glass-edge:     rgba(20, 12, 40, 0.05);
+  --halo-blur:           blur(20px) saturate(160%);
+  --halo-blur-strong:    blur(28px) saturate(180%);
+
+  /* ---------- Foreground ---------- */
+  --halo-fg-primary:     #1B1330;       /* near-ink, slight violet */
+  --halo-fg-secondary:   rgba(27, 19, 48, 0.78);
+  --halo-fg-body:        rgba(27, 19, 48, 0.66);
+  --halo-fg-muted:       rgba(27, 19, 48, 0.48);
+  --halo-fg-disabled:    rgba(27, 19, 48, 0.28);
+  --halo-fg-hint:        rgba(27, 19, 48, 0.16);
+  --halo-fg-inverse:     #FFFFFF;
+  --halo-fg-link:        var(--halo-coral-deep);
+
+  /* ---------- Border / hairline ---------- */
+  --halo-border-soft:    rgba(27, 19, 48, 0.06);
+  --halo-border-glass:   rgba(255, 255, 255, 0.50);
+  --halo-border-strong:  rgba(27, 19, 48, 0.12);
+
+  /* ---------- Radius (very rounded / pill-first) ---------- */
+  --halo-r-xs:  10px;
+  --halo-r-s:   16px;
+  --halo-r-m:   22px;
+  --halo-r-l:   28px;
+  --halo-r-xl:  36px;          /* card */
+  --halo-r-2xl: 44px;          /* big card / sheet */
+  --halo-r-pill: 9999px;
+
+  /* ---------- Spacing (4-base) ---------- */
+  --halo-s-1:  4px;  --halo-s-2:  8px;  --halo-s-3: 12px; --halo-s-4: 16px;
+  --halo-s-5: 20px;  --halo-s-6: 24px;  --halo-s-7: 28px; --halo-s-8: 32px;
+  --halo-s-10: 40px; --halo-s-12: 48px;
+
+  /* ---------- Type ---------- */
+  --halo-font: "Pretendard", "Pretendard Variable", -apple-system,
+                BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
+
+  --halo-fs-display: 36px; --halo-lh-display: 42px;
+  --halo-fs-h1:      28px; --halo-lh-h1:      34px;
+  --halo-fs-h2:      22px; --halo-lh-h2:      28px;
+  --halo-fs-h3:      18px; --halo-lh-h3:      24px;
+  --halo-fs-body:    16px; --halo-lh-body:    22px;
+  --halo-fs-md:      15px; --halo-lh-md:      22px;
+  --halo-fs-sm:      13px; --halo-lh-sm:      18px;
+  --halo-fs-xs:      11px; --halo-lh-xs:      14px;
+
+  --halo-tracking-display: -0.025em;
+  --halo-tracking-tight:   -0.015em;
+
+  /* ---------- Shadow / Elevation (light, surgical) ---------- */
+  --halo-shadow-card:
+    0 1px 2px rgba(20, 12, 40, 0.04),
+    0 0 0 1px rgba(20, 12, 40, 0.04);
+  --halo-shadow-card-raised:
+    0 6px 20px -6px rgba(20, 12, 40, 0.10),
+    0 1px 2px rgba(20, 12, 40, 0.04),
+    0 0 0 1px rgba(20, 12, 40, 0.04);
+  /* alias kept for back-compat */
+  --halo-shadow-glass: var(--halo-shadow-card);
+  --halo-shadow-float:
+    0 16px 40px -14px rgba(20, 12, 40, 0.22),
+    0 4px 12px -4px rgba(20, 12, 40, 0.10),
+    0 0 0 1px rgba(20, 12, 40, 0.05);
+  --halo-shadow-glow-coral:
+    0 6px 18px -6px rgba(143, 168, 130, 0.55),
+    0 2px 4px rgba(143, 168, 130, 0.20);
+
+  /* ---------- Motion (exaggerated) ---------- */
+  --halo-ease:        cubic-bezier(0.22, 1, 0.36, 1);
+  --halo-spring:      cubic-bezier(0.34, 1.8, 0.64, 1);   /* over-bounce */
+  --halo-d-fast:      160ms;
+  --halo-d-base:      280ms;
+  --halo-d-slow:      420ms;
+
+  /* ---------- Noise (svg, base64) ---------- */
+  --halo-noise: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.42 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/></svg>");
+}
+
+/* ---------- Back-compat aliases for existing preview cards ---------- */
+:root {
+  --tds-blue: var(--halo-coral);
+  --tds-blue-pressed: var(--halo-coral-deep);
+  --tds-blue-weak: rgba(143, 168, 130,0.14);
+  --tds-red: var(--halo-rose);
+  --tds-yellow: var(--halo-amber);
+  --tds-yellow-deep: var(--halo-amber-deep);
+  --tds-green: #00A36C;
+  --tds-bg: var(--halo-surface);
+  --tds-bg-alt: var(--halo-bg);
+  --tds-bg-muted: var(--halo-surface-2);
+  --tds-bg-divider: rgba(27,19,48,0.10);
+  --tds-bg-inverse: var(--halo-fg-primary);
+  --tds-fg-primary: var(--halo-fg-primary);
+  --tds-fg-secondary: var(--halo-fg-secondary);
+  --tds-fg-body: var(--halo-fg-body);
+  --tds-fg-muted: var(--halo-fg-muted);
+  --tds-fg-disabled: var(--halo-fg-disabled);
+  --tds-fg-hint: var(--halo-fg-hint);
+  --tds-border-hairline: var(--halo-border-soft);
+  --tds-fill-neutral: rgba(27,19,48,0.06);
+  --tds-font-text: var(--halo-font);
+  --tds-font-display: var(--halo-font);
+}
+
+/* ---------- Base ---------- */
+html, body {
+  margin: 0;
+  font-family: var(--halo-font);
+  color: var(--halo-fg-primary);
+  background: var(--halo-mesh);
+  background-attachment: fixed;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Add grain on top of any element with .halo-grain */
+.halo-grain { position: relative; }
+.halo-grain::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background-image: var(--halo-noise);
+  mix-blend-mode: overlay; opacity: 0.35; border-radius: inherit;
+}
+
+/* Plain card */
+.halo-card {
+  background: var(--halo-surface);
+  border-radius: var(--halo-r-l);
+  box-shadow: var(--halo-shadow-card);
+}
+
+/* Glass surface — used for floating nav and toast only */
+.halo-glass {
+  background: var(--halo-glass-3);
+  backdrop-filter: var(--halo-blur);
+  -webkit-backdrop-filter: var(--halo-blur);
+  border: 1px solid var(--halo-border-glass);
+  box-shadow: var(--halo-shadow-float);
+}
+
+/* Type helpers */
+.halo-display { font-size: var(--halo-fs-display); line-height: var(--halo-lh-display); font-weight:700; letter-spacing: var(--halo-tracking-display); }
+.halo-h1      { font-size: var(--halo-fs-h1);      line-height: var(--halo-lh-h1);      font-weight:700; letter-spacing: var(--halo-tracking-tight); }
+.halo-h2      { font-size: var(--halo-fs-h2);      line-height: var(--halo-lh-h2);      font-weight:700; letter-spacing: var(--halo-tracking-tight); }
+.halo-h3      { font-size: var(--halo-fs-h3);      line-height: var(--halo-lh-h3);      font-weight:700; }
+.halo-body    { font-size: var(--halo-fs-body);    line-height: var(--halo-lh-body);    color: var(--halo-fg-body); }
+.halo-md      { font-size: var(--halo-fs-md);      line-height: var(--halo-lh-md);      color: var(--halo-fg-body); }
+.halo-sm      { font-size: var(--halo-fs-sm);      line-height: var(--halo-lh-sm);      color: var(--halo-fg-muted); }
+.halo-xs      { font-size: var(--halo-fs-xs);      line-height: var(--halo-lh-xs);      color: var(--halo-fg-muted); font-weight: 500; }

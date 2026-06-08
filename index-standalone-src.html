@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>열린문 커넥트 — 디자인 캔버스</title>
+  <link rel="stylesheet" href="halo-tokens.css" />
+  <link rel="stylesheet" href="app-tokens.css" />
+  <meta name="ext-resource-dependency" content="./.design-canvas.state.json" data-resource-id="dcState" />
+  <style>
+    html, body { margin: 0; background: #f0eee9; }
+  </style>
+</head>
+<body>
+  <template id="__bundler_thumbnail" data-bg-color="#5B7AB0">
+    <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+      <rect width="1200" height="800" fill="#5B7AB0"/>
+      <g transform="translate(600 400)">
+        <rect x="-110" y="-200" width="220" height="400" rx="44" fill="#fff" opacity="0.95"/>
+        <rect x="-70" y="-40" width="60" height="180" fill="#5B7AB0"/>
+        <rect x="-130" y="40" width="260" height="60" fill="#5B7AB0"/>
+      </g>
+    </svg>
+  </template>
+  <div id="root"></div>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+  <script type="text/babel" src="design-canvas.jsx"></script>
+  <script type="text/babel" src="tweaks-panel.jsx"></script>
+  <script type="text/babel" src="lib.jsx"></script>
+  <script type="text/babel" src="screens-auth.jsx"></script>
+  <script type="text/babel" src="screens-home.jsx"></script>
+  <script type="text/babel" src="screens-market.jsx"></script>
+  <script type="text/babel" src="screens-group.jsx"></script>
+  <script type="text/babel" src="screens-prayer.jsx"></script>
+  <script type="text/babel" src="screens-study.jsx"></script>
+  <script type="text/babel" src="screens-mypage.jsx"></script>
+  <script type="text/babel" src="screens-extra-home.jsx"></script>
+  <script type="text/babel" src="screens-extra-market.jsx"></script>
+  <script type="text/babel" src="screens-extra-group.jsx"></script>
+  <script type="text/babel" src="screens-extra-prayer.jsx"></script>
+  <script type="text/babel" src="screens-extra-study.jsx"></script>
+  <script type="text/babel" src="screens-extra-mypage.jsx"></script>
+  <script type="text/babel" src="app.jsx"></script>
+</body>
+</html>
