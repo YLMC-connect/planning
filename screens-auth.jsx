@@ -685,18 +685,6 @@ function ScreenSignup({ variant = 'default' }) {
           </div>
         </div>
 
-        <div style={{
-          marginTop: 24, padding: '12px 14px',
-          borderRadius: 'var(--app-r-m)', background: 'var(--app-primary-soft)',
-          display:'flex', gap: 10,
-        }}>
-          <div style={{ color: 'var(--app-primary-deep)', flexShrink: 0, marginTop: 1 }}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10" opacity=".18"/><circle cx="12" cy="8" r="1.4"/><rect x="11" y="11" width="2" height="7" rx="1"/></svg>
-          </div>
-          <div className="t-sm" style={{ color: 'var(--app-primary-deep)', lineHeight: 1.5 }}>
-            목장과 부서는 가입 후 관리자가 확인하여 배정해드려요.
-          </div>
-        </div>
       </div>
 
       <div className="bottom-flat">
@@ -708,9 +696,72 @@ function ScreenSignup({ variant = 'default' }) {
   );
 }
 
+function ScreenSignupResult({ variant = 'matched' }) {
+  const isPending = variant === 'pending';
+  return (
+    <Phone>
+      <AuthStyles/>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', padding: '44px 24px 28px' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: 46 }}>
+          <div style={{
+            width: 82, height: 82, borderRadius: 26,
+            background: isPending ? 'var(--app-surface-2)' : 'linear-gradient(135deg, var(--app-primary), var(--app-primary-deep))',
+            color: isPending ? 'var(--app-primary-deep)' : '#fff',
+            display: 'grid', placeItems: 'center',
+            boxShadow: isPending ? 'none' : '0 12px 26px -10px rgba(91,122,176,0.55)',
+          }}>
+            {isPending ? (
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="9"/>
+                <path d="M12 7v5l3 2"/>
+              </svg>
+            ) : (
+              <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M20 6L9 17l-5-5"/>
+              </svg>
+            )}
+          </div>
+        </div>
+
+        <div style={{ marginTop: 28, textAlign: 'center' }}>
+          <div style={{ fontSize: 'calc(24px * var(--app-fs-scale))', fontWeight: 850, letterSpacing: '-0.02em' }}>
+            {isPending ? '승인 대기 중이에요' : '가입이 완료됐어요'}
+          </div>
+          <div className="t-body" style={{ marginTop: 10, lineHeight: 1.55 }}>
+            {isPending
+              ? '사전 등록 명단에서 확인되지 않아 관리자 승인 후 이용할 수 있어요.'
+              : '사전 등록 명단에서 확인되어 바로 이용할 수 있어요.'}
+          </div>
+        </div>
+
+        <div className="card" style={{ marginTop: 34, padding: 18, boxShadow: '0 1px 3px rgba(20,30,18,0.05)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <span className={isPending ? 'badge badge-amber' : 'badge badge-primary'}>
+              {isPending ? '승인 대기' : '가입 완료'}
+            </span>
+            <div style={{ fontWeight: 800, fontSize: 'calc(14px * var(--app-fs-scale))' }}>
+              {isPending ? '가입 신청이 접수되었습니다' : '회원 정보가 확인되었습니다'}
+            </div>
+          </div>
+          <div className="t-sm" style={{ marginTop: 10, lineHeight: 1.55 }}>
+            {isPending
+              ? '승인 완료 시 알림으로 알려드릴게요.'
+              : '지금부터 열린문 커넥트를 이용할 수 있습니다.'}
+          </div>
+        </div>
+
+        <div style={{ flex: 1 }} />
+        <button className={isPending ? 'btn btn-line' : 'btn btn-primary'} style={{ width: '100%' }}>
+          {isPending ? '로그인으로 돌아가기' : '홈으로 이동'}
+        </button>
+      </div>
+    </Phone>
+  );
+}
+
 Object.assign(window, {
   ScreenSplash, ScreenLogin,
-  ScreenTerms, ScreenTermsSheet, ScreenSignup,
+  ScreenTerms, ScreenTermsSheet, ScreenSignup, ScreenSignupResult,
   // shared helpers
   AuthStyles, Spinner, InlineError, FieldHint, FieldLabel,
   TextInput, PasswordInput, SubmitButton, Toast,

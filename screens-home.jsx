@@ -117,6 +117,45 @@ function ScreenHome() {
           </div>
         </div>
 
+        {/* 새벽기도 말씀 요약 */}
+        <div style={{ padding: '12px 18px 0' }}>
+          <div className="card" style={{
+            padding: 16,
+            border: '1px solid rgba(91,122,176,0.18)',
+            boxShadow: '0 1px 3px rgba(20,30,18,0.05)',
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', gap: 10, alignItems: 'flex-start' }}>
+              <div style={{ minWidth: 0 }}>
+                <div className="t-xs" style={{ fontWeight: 700, color: 'var(--app-primary-deep)' }}>오늘의 새벽기도 말씀</div>
+                <div style={{ marginTop: 6, fontWeight: 850, fontSize: 'calc(15px * var(--app-fs-scale))', letterSpacing: '-0.01em' }}>
+                  은혜 안에 굳게 서라
+                </div>
+                <div className="t-sm" style={{ marginTop: 7, lineHeight: 1.55 }}>
+                  2026.06.08 · 말씀을 붙드는 하루의 시작, 공동체를 향한 사랑을 다시 세웁니다.
+                </div>
+              </div>
+              <div style={{
+                width: 42,
+                height: 42,
+                borderRadius: 14,
+                background: 'var(--app-primary-soft)',
+                color: 'var(--app-primary-deep)',
+                display: 'grid',
+                placeItems: 'center',
+                flexShrink: 0,
+              }}>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M5 4.5h9a3 3 0 0 1 3 3v12H8a3 3 0 0 1-3-3z"/>
+                  <path d="M8 8h6M8 11h5M8 14h4"/>
+                </svg>
+              </div>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginTop: 12, color: 'var(--app-primary-deep)', fontWeight: 800, fontSize: 'calc(13px * var(--app-fs-scale))' }}>
+              상세 보기 {Icon.chevron(14)}
+            </div>
+          </div>
+        </div>
+
         {/* 새로 생긴 소모임 */}
         <Section title="새로 생긴 소모임" more="더보기">
           <div style={{ display:'flex', gap: 12, overflowX:'auto', padding:'0 18px 4px', scrollbarWidth:'none' }}>

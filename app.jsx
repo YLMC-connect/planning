@@ -61,10 +61,12 @@ function App() {
           <DCArtboard id="signup-phone-fmt" label="4-3 · 회원가입 — 연락처 형식 에러" width={W} height={H}><ScreenSignup variant="phone-error"/></DCArtboard>
           <DCArtboard id="signup-phone-dup" label="4-4 · 회원가입 — 연락처 중복"   width={W} height={H}><ScreenSignup variant="phone-dup"/></DCArtboard>
           <DCArtboard id="signup-loading"   label="4-5 · 회원가입 — 로딩"         width={W} height={H}><ScreenSignup variant="loading"/></DCArtboard>
+          <DCArtboard id="signup-complete"  label="4-6 · 회원가입 완료 — 자동 가입 (FUNC-002)" width={W} height={H}><ScreenSignupResult variant="matched"/></DCArtboard>
+          <DCArtboard id="signup-pending"   label="4-7 · 회원가입 완료 — 승인 대기 (FUNC-002)" width={W} height={H}><ScreenSignupResult variant="pending"/></DCArtboard>
         </DCSection>
 
         <DCSection id="home" title="홈" subtitle="앱의 얼굴 · 알림">
-          <DCArtboard id="home" label="홈" width={W} height={H}><ScreenHome/></DCArtboard>
+          <DCArtboard id="home" label="홈 (FUNC-056 포함)" width={W} height={H}><ScreenHome/></DCArtboard>
           <DCArtboard id="notifications" label="알림 목록" width={W} height={H}><ScreenNotifications/></DCArtboard>
         </DCSection>
 
@@ -142,6 +144,11 @@ function App() {
           <DCArtboard id="pray-detail" label="26 · 기도방 상세 — 기도 탭 (FUNC-041,043,044,045)" width={W} height={H}><ScreenPrayerDetail/></DCArtboard>
           <DCArtboard id="pray-answer" label="26-1 · 기도방 상세 — 응답 탭 (FUNC-048)" width={W} height={H}><ScreenPrayerDetail variant="answers"/></DCArtboard>
           <DCArtboard id="pray-apply" label="27 · 참여 신청 (FUNC-042)" width={W} height={H}><ScreenPrayerApply/></DCArtboard>
+          <DCArtboard id="pray-approval" label="27-1 · 참가 신청 승인·거절 (FUNC-051)" width={W} height={H}><ScreenPrayerApproval/></DCArtboard>
+          <DCArtboard id="pray-members" label="27-2 · 기도방 멤버 관리 (FUNC-052)" width={W} height={H}><ScreenPrayerMembers/></DCArtboard>
+          <DCArtboard id="pray-moderation" label="27-3 · 기도제목 승인·수정·삭제 (FUNC-053)" width={W} height={H}><ScreenPrayerModeration/></DCArtboard>
+          <DCArtboard id="pray-urgent-admin" label="27-4 · 긴급 기도제목 관리 (FUNC-054)" width={W} height={H}><ScreenPrayerUrgentManage/></DCArtboard>
+          <DCArtboard id="pray-offline-match" label="27-5 · 오프라인 요청자 회원 매칭 (FUNC-055)" width={W} height={H}><ScreenPrayerOfflineMatch/></DCArtboard>
           <DCArtboard id="pray-request" label="28 · 내 기도제목 요청 현황 (FUNC-046)" width={W} height={H}><ScreenPrayerRequest/></DCArtboard>
           <DCArtboard id="pray-write" label="29 · 기도제목 등록·수정 (FUNC-046)" width={W} height={H}><ScreenPrayerWrite/></DCArtboard>
           <DCArtboard id="pray-answer-request" label="30 · 기도응답 완료 요청 (FUNC-047)" width={W} height={H}><ScreenPrayerWrite variant="answer-request"/></DCArtboard>
