@@ -135,9 +135,6 @@ function ScreenPrayerList({ variant = 'general' }) {
           <div className="title">동행</div>
           <div className="t-sm" style={{ marginTop: 2 }}>함께 기도하고 말씀으로 자라가요</div>
         </div>
-        <div className="actions">
-          <div style={{ width: 36, height: 36, display: 'grid', placeItems: 'center', color: 'var(--app-ink-soft)' }}>{Icon.search()}</div>
-        </div>
       </div>
 
       <div style={{ padding: '0 18px 12px' }}>
@@ -165,9 +162,19 @@ function ScreenPrayerList({ variant = 'general' }) {
           </div>
         </Section>
 
-        <Section title="내 기도제목" more="전체보기">
+        <Section title="내 기도제목">
           <div style={{ padding: '0 18px', display: 'flex', flexDirection: 'column', gap: 9 }}>
             {myRequests.slice(0, 3).map((item, i) => <PrayerRequestSummaryCard key={i} item={item} />)}
+            <button className="btn" style={{
+              width: '100%',
+              height: 48,
+              marginTop: 2,
+              backgroundColor: '#fff',
+              border: '1.5px solid var(--app-primary)',
+              color: 'var(--app-primary-deep)',
+            }}>
+              내 기도제목 전체보기
+            </button>
           </div>
         </Section>
 
@@ -195,7 +202,6 @@ function ScreenPrayerList({ variant = 'general' }) {
                     월-토 오전/오후 기도방은 신청 화면에서 선택해요.
                   </div>
                 </div>
-                {Icon.chevron(18)}
               </div>
               <button className="btn btn-primary" style={{ width: '100%', height: 46, marginTop: 14 }}>
                 신청하기
@@ -312,7 +318,6 @@ function PrayerPendingRow({ person }) {
   );
 }
 
-const PRAYER_MEMBER_PREVIEW_LIMIT = 5;
 const PRAYER_COMPLETION_NAMES = [
   '김은혜', '이준호', '박민지', '한수연', '오지연', '최민수', '정하은', '강서준', '문하영', '배지성',
   '송유리', '윤다은', '임도윤', '장예린', '노시온', '백하준', '서민재', '유하늘', '조은별', '홍지우',
@@ -344,6 +349,12 @@ function PrayerItem({ item, answer }) {
         <div className="t-xs" style={{ whiteSpace: 'nowrap' }}>{item.when}</div>
       </div>
       <div style={{ marginTop: 10, fontWeight: 800, fontSize: 'calc(14px * var(--app-fs-scale))' }}>{item.title}</div>
+      {item.author && (
+        <div className="t-xs" style={{ marginTop: 5, display: 'flex', alignItems: 'center', gap: 4, color: 'var(--app-ink-soft)' }}>
+          {Icon.user(13)}
+          <span>작성자 {item.author}</span>
+        </div>
+      )}
       <div className="t-sm" style={{ marginTop: 7, lineHeight: 1.55 }}>
         {item.text}
       </div>
@@ -365,24 +376,23 @@ function PrayerItem({ item, answer }) {
 }
 
 function ScreenPrayerDetail({ variant = 'pray' }) {
-  const [completionOpen, setCompletionOpen] = useState(true);
+  const answerMode = variant === 'answers';
+  const statusMode = variant === 'status' || variant === 'admin';
   const adminMode = variant === 'admin';
+  const activeTab = statusMode ? 'status' : answerMode ? 'answers' : 'pray';
   const urgent = [
-    { category: '치유', title: '수술 후 회복을 위해', text: '어머니 수술 후 회복 과정이 안정되도록 함께 기도해주세요.', when: '오늘', urgent: true },
+    { category: '치유', title: '수술 후 회복을 위해', author: '박지훈', text: '어머니 수술 후 회복 과정이 안정되도록 함께 기도해주세요.', when: '오늘', urgent: true },
   ];
   const progress = [
-    { category: '구원', title: '가족의 신앙 회복', text: '오랫동안 교회를 떠난 가족이 다시 예배 자리로 돌아오도록 기도합니다.', when: '어제' },
-    { category: '자녀', title: '학교 적응과 관계', text: '새 학기 친구 관계와 학업을 지혜롭게 감당하도록 기도해주세요.', when: '2일 전' },
+    { category: '구원', title: '가족의 신앙 회복', author: '김은혜', text: '오랫동안 교회를 떠난 가족이 다시 예배 자리로 돌아오도록 기도합니다.', when: '어제' },
+    { category: '자녀', title: '학교 적응과 관계', author: '한수연', text: '새 학기 친구 관계와 학업을 지혜롭게 감당하도록 기도해주세요.', when: '2일 전' },
   ];
   const answers = [
-    { category: '일반', title: '새로운 자리 적응', text: '새로운 자리에서 선한 관계를 세우도록 함께 기도했던 제목입니다.', answer: '첫 주를 잘 마쳤고 팀 안에서 좋은 도움을 받고 있습니다.', when: '오늘' },
-    { category: '일반', title: '가족 대화 회복', text: '대화가 끊겼던 가족과의 회복을 위해 함께 기도했던 제목입니다.', answer: '서로 이야기를 시작했고 함께 예배드리기로 했습니다.', when: '3일 전' },
-    { category: '구원', title: '예배 자리 회복', text: '예배의 기쁨을 다시 회복하기 위해 함께 기도했던 제목입니다.', answer: '주일 예배와 목장 모임에 다시 참여했습니다.', when: '9일 전' },
+    { category: '일반', title: '새로운 자리 적응', author: '이준호', text: '새로운 자리에서 선한 관계를 세우도록 함께 기도했던 제목입니다.', answer: '첫 주를 잘 마쳤고 팀 안에서 좋은 도움을 받고 있습니다.', when: '오늘', answeredDaysAgo: 0 },
+    { category: '일반', title: '가족 대화 회복', author: '정하은', text: '대화가 끊겼던 가족과의 회복을 위해 함께 기도했던 제목입니다.', answer: '서로 이야기를 시작했고 함께 예배드리기로 했습니다.', when: '3일 전', answeredDaysAgo: 3 },
+    { category: '구원', title: '예배 자리 회복', author: '오지연', text: '예배의 기쁨을 다시 회복하기 위해 함께 기도했던 제목입니다.', answer: '주일 예배와 목장 모임에 다시 참여했습니다.', when: '9일 전', answeredDaysAgo: 9 },
   ];
-  const answerMode = variant === 'answers';
-  const completionPreview = PRAYER_COMPLETIONS.slice(0, PRAYER_MEMBER_PREVIEW_LIMIT);
-  const pendingPreview = PRAYER_PENDING_MEMBERS.slice(0, PRAYER_MEMBER_PREVIEW_LIMIT);
-
+  const recentAnswers = answers.filter(item => item.answeredDaysAgo <= 7);
   return (
     <Phone>
       <TopBar
@@ -397,62 +407,65 @@ function ScreenPrayerDetail({ variant = 'pray' }) {
       </div>
 
       <UnderlineTabs
-        items={[{ key: 'pray', label: '기도' }, { key: 'answers', label: `응답 ${answers.length}` }]}
-        active={answerMode ? 'answers' : 'pray'}
+        items={[
+          { key: 'pray', label: '기도' },
+          { key: 'answers', label: '응답' },
+          { key: 'status', label: '현황' },
+        ]}
+        active={activeTab}
       />
 
-      <div className="phone-body" style={{ padding: '14px 18px 96px', background: 'var(--app-bg)' }}>
-        {!answerMode && (
-          <div className="card" style={{ padding: 15, marginBottom: 12 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <PrayerDayBadge day="월" time="오전" size={46} />
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div className="t-xs">오늘 기준</div>
-                <div style={{ marginTop: 4, fontWeight: 850, fontSize: 'calc(17px * var(--app-fs-scale))' }}>
-                  기도 현황
+      <div className="phone-body" style={{ padding: activeTab === 'pray' ? '14px 18px 96px' : '14px 18px 22px', background: 'var(--app-bg)' }}>
+        {statusMode ? (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            <div className="card" style={{ padding: 15 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                <PrayerDayBadge day="월" time="오전" size={46} />
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ marginTop: 4, fontWeight: 850, fontSize: 'calc(17px * var(--app-fs-scale))' }}>
+                    기도 현황
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
-              <PrayerStat label="완료" value="34명" tone="var(--app-primary-soft)" />
-              <PrayerStat label="미완료" value="11명" />
-              <PrayerStat label="참여율" value="75%" />
-            </div>
+              <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
+                <PrayerStat label="완료" value="34명" tone="var(--app-primary-soft)" />
+                <PrayerStat label="미완료" value="11명" />
+                <PrayerStat label="참여율" value="75%" />
+              </div>
 
-            <button
-              className="btn btn-soft btn-md"
-              onClick={() => setCompletionOpen(!completionOpen)}
-              style={{ width: '100%', marginTop: 12 }}
-            >
-              {completionOpen ? '명단 접기' : '명단 보기'}
-            </button>
-
-            {completionOpen && (
               <div style={{ marginTop: 12 }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8, marginBottom: 2 }}>
-                  <div style={{ fontWeight: 850, fontSize: 'calc(14px * var(--app-fs-scale))' }}>기도 완료한 사람</div>
-                  <div className="t-xs">5명 미리보기</div>
+                <div style={{
+                  height: 8,
+                  borderRadius: 'var(--app-r-pill)',
+                  background: 'rgba(30,41,32,0.08)',
+                  overflow: 'hidden',
+                }}>
+                  <div style={{
+                    width: '75%',
+                    height: '100%',
+                    borderRadius: 'inherit',
+                    background: 'var(--app-primary)',
+                  }} />
                 </div>
-                {completionPreview.map((person, i) => <PrayerCompletionRow key={i} person={person} canLike={adminMode} />)}
-                <button className="btn btn-line btn-sm" style={{ width: '100%', height: 38, marginTop: 8 }}>
-                  완료자 전체보기
-                </button>
-
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8, marginTop: 14, marginBottom: 2 }}>
-                  <div style={{ fontWeight: 850, fontSize: 'calc(14px * var(--app-fs-scale))' }}>아직 완료 전</div>
-                  <div className="t-xs">5명 미리보기</div>
-                </div>
-                {pendingPreview.map((person, i) => <PrayerPendingRow key={i} person={person} />)}
-                <button className="btn btn-line btn-sm" style={{ width: '100%', height: 38, marginTop: 8 }}>
-                  미완료자 전체보기
-                </button>
               </div>
-            )}
-          </div>
-        )}
+            </div>
 
-        {!answerMode ? (
+            <div className="card" style={{ padding: 15 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8, marginBottom: 2 }}>
+                <div style={{ fontWeight: 850, fontSize: 'calc(14px * var(--app-fs-scale))' }}>기도 완료한 사람</div>
+                <div className="t-xs">34명</div>
+              </div>
+              {PRAYER_COMPLETIONS.map((person, i) => <PrayerCompletionRow key={i} person={person} canLike={adminMode} />)}
+
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8, marginTop: 14, marginBottom: 2 }}>
+                <div style={{ fontWeight: 850, fontSize: 'calc(14px * var(--app-fs-scale))' }}>아직 완료 전</div>
+                <div className="t-xs">11명</div>
+              </div>
+              {PRAYER_PENDING_MEMBERS.map((person, i) => <PrayerPendingRow key={i} person={person} />)}
+            </div>
+          </div>
+        ) : !answerMode ? (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
             <Section title="긴급 기도제목">
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
@@ -468,7 +481,7 @@ function ScreenPrayerDetail({ variant = 'pray' }) {
 
             <Section title="최근 기도응답">
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                {answers.slice(0, 2).map((item, i) => <PrayerItem key={i} item={item} answer />)}
+                {recentAnswers.map((item, i) => <PrayerItem key={i} item={item} answer />)}
               </div>
             </Section>
           </div>
@@ -479,7 +492,7 @@ function ScreenPrayerDetail({ variant = 'pray' }) {
         )}
       </div>
 
-      {!answerMode && (
+      {activeTab === 'pray' && (
         <div style={{
           position: 'absolute',
           left: 18,
@@ -487,7 +500,7 @@ function ScreenPrayerDetail({ variant = 'pray' }) {
           bottom: 24,
           zIndex: 5,
         }}>
-          <button className="btn btn-primary" onClick={() => setCompletionOpen(true)} style={{ width: '100%', height: 52 }}>
+          <button className="btn btn-primary" style={{ width: '100%', height: 52 }}>
             {Icon.check(18)} 오늘 기도 완료
           </button>
         </div>
@@ -496,82 +509,4 @@ function ScreenPrayerDetail({ variant = 'pray' }) {
   );
 }
 
-function ScreenPrayerParticipantList() {
-  const [filter, setFilter] = useState('all');
-  const filters = [
-    { key: 'all', label: '전체' },
-    { key: 'done', label: '완료' },
-    { key: 'pending', label: '미완료' },
-  ];
-  const showDone = filter === 'all' || filter === 'done';
-  const showPending = filter === 'all' || filter === 'pending';
-
-  return (
-    <Phone>
-      <TopBar title="기도방 참여자 전체보기" />
-      <div style={{ padding: '0 18px 12px', display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
-        <span className="badge badge-primary">월요일 오전</span>
-        <span className="badge badge-mute">전체 45명</span>
-        <span className="badge badge-primary">완료 34명</span>
-        <span className="badge badge-mute">미완료 11명</span>
-      </div>
-
-      <div style={{ padding: '0 18px 12px' }}>
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(3, 1fr)',
-          gap: 6,
-          padding: 4,
-          borderRadius: 'var(--app-r-pill)',
-          background: 'rgba(30,41,32,0.05)',
-        }}>
-          {filters.map(item => {
-            const on = filter === item.key;
-            return (
-              <button
-                key={item.key}
-                className="btn"
-                onClick={() => setFilter(item.key)}
-                style={{
-                  height: 36,
-                  borderRadius: 'var(--app-r-pill)',
-                  background: on ? '#fff' : 'transparent',
-                  boxShadow: on ? '0 1px 2px rgba(20,30,18,0.10)' : 'none',
-                  color: on ? 'var(--app-ink)' : 'var(--app-ink-mute)',
-                  fontWeight: on ? 850 : 700,
-                  padding: 0,
-                }}
-              >
-                {item.label}
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      <div className="phone-body" style={{ padding: '0 18px 22px' }}>
-        {showDone && (
-          <div className="card" style={{ padding: 15, boxShadow: '0 1px 3px rgba(20,30,18,0.05)', marginBottom: 12 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8, alignItems: 'center', marginBottom: 2 }}>
-              <div style={{ fontWeight: 850, fontSize: 'calc(15px * var(--app-fs-scale))' }}>기도 완료한 사람</div>
-              <div className="t-xs">34명</div>
-            </div>
-            {PRAYER_COMPLETIONS.map((person, i) => <PrayerCompletionRow key={i} person={person} canLike={false} />)}
-          </div>
-        )}
-
-        {showPending && (
-          <div className="card" style={{ padding: 15, boxShadow: '0 1px 3px rgba(20,30,18,0.05)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8, alignItems: 'center', marginBottom: 2 }}>
-              <div style={{ fontWeight: 850, fontSize: 'calc(15px * var(--app-fs-scale))' }}>아직 완료 전</div>
-              <div className="t-xs">11명</div>
-            </div>
-            {PRAYER_PENDING_MEMBERS.map((person, i) => <PrayerPendingRow key={i} person={person} />)}
-          </div>
-        )}
-      </div>
-    </Phone>
-  );
-}
-
-Object.assign(window, { ScreenPrayerList, ScreenPrayerDetail, ScreenPrayerParticipantList });
+Object.assign(window, { ScreenPrayerList, ScreenPrayerDetail });
