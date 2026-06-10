@@ -395,10 +395,7 @@ function ScreenPrayerDetail({ variant = 'pray' }) {
   const recentAnswers = answers.filter(item => item.answeredDaysAgo <= 7);
   return (
     <Phone>
-      <TopBar
-        title="월요일 오전 기도방"
-        right={<div style={{ width: 36, height: 36, display: 'grid', placeItems: 'center', color: 'var(--app-ink-soft)' }}>{Icon.bell()}</div>}
-      />
+      <TopBar title="월요일 오전 기도방" />
 
       <div style={{ padding: '0 18px 12px', display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
         <span className="badge badge-primary">참여중</span>

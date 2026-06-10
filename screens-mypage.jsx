@@ -84,6 +84,16 @@ function ScreenMyPage({ variant = 'default' }) {
             label="내 활동"
           />
           <MenuRow
+            icon={
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M8 12.5V8a2 2 0 014 0v4.5"/>
+                <path d="M12 12.5V7a2 2 0 014 0v6"/>
+                <path d="M6 13.5c1.8 4.3 4.4 6.5 8 6.5 3.2 0 5-2.2 5-5.8V11"/>
+              </svg>
+            }
+            label="중보기도 활동 이력"
+          />
+          <MenuRow
             icon={<BlockIcon size={20}/>}
             label="차단 관리"
             last

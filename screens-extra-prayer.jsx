@@ -22,7 +22,13 @@ function PrayerTextarea({ rows = 3, style, ...props }) {
   );
 }
 
-function FixedPrayerRoomGrid({ selected = '화-오후' }) {
+const TEAM_LEADER_ROOMS = [
+  { key: '월-오전', members: 12, pending: 1 },
+  { key: '목-오후', members: 9, pending: 0 },
+  { key: '토-오전', members: 15, pending: 2 },
+];
+
+function FixedPrayerRoomGrid({ selected = '화-오후', showChange = true }) {
   const [day, time] = selected.split('-');
   return (
     <div className="card" style={{
@@ -36,9 +42,9 @@ function FixedPrayerRoomGrid({ selected = '화-오후' }) {
       <PrayerDayBadge day={day} time={time} size={42} />
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{ fontWeight: 850, fontSize: 'calc(15px * var(--app-fs-scale))' }}>{PRAYER_DAY_NAMES[day]} {time} 기도방</div>
-        <div className="t-xs" style={{ marginTop: 4 }}>현재 관리 중인 기도방</div>
+        <div className="t-xs" style={{ marginTop: 4 }}>내가 팀장으로 맡은 기도방</div>
       </div>
-      <button className="btn btn-line btn-sm" style={{ height: 34, padding: '0 12px' }}>변경</button>
+      {showChange && <button className="btn btn-line btn-sm" style={{ height: 34, padding: '0 12px' }}>변경</button>}
     </div>
   );
 }
@@ -240,6 +246,7 @@ function AdminPrayerMetric({ label, value }) {
 
 function ScreenPrayerMembers({ variant = 'default' }) {
   const [filter, setFilter] = useState('all');
+  const roomSelectMode = variant === 'room-select';
   const filters = [
     { key: 'all', label: '전체' },
     { key: 'active', label: '참여중' },
@@ -251,13 +258,68 @@ function ScreenPrayerMembers({ variant = 'default' }) {
     { name: '박지훈', role: '중보기도요원', since: '2026.05.20', status: '참여중', tone: 'badge-primary', filter: 'active', lastDone: '3일 전', room: '월요일 오전' },
     { name: '한수연', role: '중보기도요원', since: '2026.05.28', status: '참여중', tone: 'badge-primary', filter: 'active', lastDone: '어제 21:10', room: '월요일 오전' },
   ];
-  const history = [
-    { name: '오지연', room: '화요일 오후', period: '2026.03.01-2026.05.31', reason: '목요일 오후 방으로 이동' },
-    { name: '이준호', room: '월요일 오전', period: '2026.02.15-2026.04.20', reason: '개인 사정으로 제외' },
-  ];
   const visibleMembers = filter === 'all'
     ? members
     : members.filter(member => member.filter === filter || (filter === 'active' && member.status === '참여중'));
+
+  if (roomSelectMode) {
+    return (
+      <Phone>
+        <TopBar title="관리 기도방 선택" />
+        <div className="phone-body" style={{ padding: '4px 18px 112px' }}>
+          <div style={{
+            padding: 14,
+            borderRadius: 'var(--app-r-m)',
+            background: 'var(--app-primary-soft)',
+            color: 'var(--app-primary-deep)',
+            fontSize: 'calc(13px * var(--app-fs-scale))',
+            lineHeight: 1.55,
+            marginBottom: 14,
+          }}>
+            내가 팀장으로 맡은 기도방만 선택할 수 있습니다.
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            {TEAM_LEADER_ROOMS.map((room, i) => {
+              const [day, time] = room.key.split('-');
+              const selected = i === 0;
+              return (
+                <button
+                  key={room.key}
+                  className="card"
+                  style={{
+                    width: '100%',
+                    padding: 15,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 12,
+                    textAlign: 'left',
+                    border: selected ? '1.5px solid var(--app-primary)' : '1px solid var(--app-line)',
+                    background: selected ? 'var(--app-primary-soft)' : '#fff',
+                    boxShadow: '0 1px 3px rgba(20,30,18,0.05)',
+                    cursor: 'pointer',
+                  }}
+                >
+                  <PrayerDayBadge day={day} time={time} size={42} />
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontWeight: 850, fontSize: 'calc(15px * var(--app-fs-scale))' }}>{PRAYER_DAY_NAMES[day]} {time} 기도방</div>
+                    <div className="t-xs" style={{ marginTop: 5 }}>멤버 {room.members}명 · 대기 {room.pending}건</div>
+                  </div>
+                  {selected ? <span className="badge badge-primary">선택중</span> : <span className="badge badge-mute">팀장</span>}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+        <div style={{ position: 'absolute', left: 18, right: 18, bottom: 24, zIndex: 5 }}>
+          <button className="btn btn-primary" style={{ width: '100%', height: 54 }}>
+            선택한 기도방 보기
+          </button>
+        </div>
+      </Phone>
+    );
+  }
+
   return (
     <Phone>
       <TopBar title="기도방 멤버 관리" />
@@ -268,13 +330,6 @@ function ScreenPrayerMembers({ variant = 'default' }) {
           <AdminPrayerMetric label="전체" value="12" />
           <AdminPrayerMetric label="참여중" value="12" />
           <AdminPrayerMetric label="팀장" value="1" />
-        </div>
-
-        <div className="card" style={{ marginTop: 14, padding: 15, background: 'var(--app-primary-soft)', boxShadow: 'none' }}>
-          <div style={{ fontWeight: 850, fontSize: 'calc(15px * var(--app-fs-scale))' }}>관리 범위</div>
-          <div className="t-sm" style={{ marginTop: 6, color: 'var(--app-primary-deep)', lineHeight: 1.5 }}>
-            요일별 팀장은 담당 기도방 멤버만 관리하고, 중보기도 관리자는 방 변경 후 전체 기도방 멤버를 관리합니다.
-          </div>
         </div>
 
         <div style={{ marginTop: 14 }}>
@@ -314,39 +369,13 @@ function ScreenPrayerMembers({ variant = 'default' }) {
                     <span className="t-xs" style={{ flexShrink: 0 }}>{m.room}</span>
                   </div>
                   <div className="t-sm" style={{ marginTop: 5 }}>최근 완료 {m.lastDone} · 등록 {m.since}</div>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 6, marginTop: 12 }}>
-                    <button className="btn btn-line btn-sm" style={{ padding: 0 }}>역할</button>
-                    <button className="btn btn-line btn-sm" style={{ padding: 0 }}>이동</button>
-                    <button className="btn btn-line btn-sm" style={{ padding: 0, color: 'var(--app-danger)', borderColor: 'rgba(192,74,74,0.35)' }}>제외</button>
+                  <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 12 }}>
+                    <button className="btn btn-line btn-sm" style={{ minWidth: 86, color: 'var(--app-danger)', borderColor: 'rgba(192,74,74,0.35)' }}>제외</button>
                   </div>
                 </div>
               </div>
             </div>
           ))}
-        </div>
-
-        <div className="card" style={{ marginTop: 14, padding: 15, boxShadow: '0 1px 3px rgba(20,30,18,0.05)' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8, alignItems: 'center' }}>
-            <div style={{ fontWeight: 850, fontSize: 'calc(15px * var(--app-fs-scale))' }}>참여 이력</div>
-            <span className="badge badge-mute">최근 2건</span>
-          </div>
-          <div className="t-sm" style={{ marginTop: 6, lineHeight: 1.45 }}>
-            제외되거나 다른 방으로 이동한 기도요원 기록을 남깁니다.
-          </div>
-          <div style={{ marginTop: 10 }}>
-            {history.map((item, i) => (
-              <div key={i} style={{
-                padding: '10px 0',
-                borderTop: i === 0 ? '1px solid var(--app-line)' : '1px solid var(--app-line)',
-              }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8 }}>
-                  <div style={{ fontWeight: 800, fontSize: 'calc(13px * var(--app-fs-scale))' }}>{item.name}</div>
-                  <div className="t-xs">{item.room}</div>
-                </div>
-                <div className="t-sm" style={{ marginTop: 4 }}>{item.period} · {item.reason}</div>
-              </div>
-            ))}
-          </div>
         </div>
 
         {variant === 'exclude-confirm' && (
@@ -714,21 +743,11 @@ function ScreenPrayerWrite({ variant = 'create' }) {
           <div className="card" style={{ padding: 15, display: 'flex', flexDirection: 'column', gap: 13 }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
               <div>
-                <div style={{ fontWeight: 800, fontSize: 'calc(14px * var(--app-fs-scale))' }}>긴급 기도제목</div>
-                <div className="t-sm" style={{ marginTop: 3 }}>긴급은 카테고리가 아닌 별도 속성입니다</div>
+                <div style={{ fontWeight: 800, fontSize: 'calc(14px * var(--app-fs-scale))' }}>긴급 요청</div>
+                <div className="t-sm" style={{ marginTop: 3 }}>관리자 검토 시 긴급 여부를 함께 확인합니다</div>
               </div>
               <div style={{ width: 42, height: 24, borderRadius: 999, background: 'var(--app-primary)', position: 'relative', flexShrink: 0 }}>
                 <div style={{ position: 'absolute', top: 2, right: 2, width: 20, height: 20, borderRadius: '50%', background: '#fff' }} />
-              </div>
-            </div>
-            <div style={{ display: 'flex', gap: 10 }}>
-              <div style={{ flex: 1 }}>
-                <div className="t-xs" style={{ marginBottom: 5 }}>노출 시작</div>
-                <PrayerInput defaultValue="오늘 09:00" />
-              </div>
-              <div style={{ flex: 1 }}>
-                <div className="t-xs" style={{ marginBottom: 5 }}>노출 종료</div>
-                <PrayerInput defaultValue="오늘 21:00" />
               </div>
             </div>
           </div>
