@@ -60,6 +60,42 @@ function PrayerStat({ label, value, tone }) {
   );
 }
 
+function PrayerEmptyState({ icon, title, desc, action, framed = true }) {
+  return (
+    <div className={framed ? 'card' : undefined} style={{
+      padding: '24px 18px',
+      textAlign: 'center',
+      boxShadow: framed ? '0 1px 3px rgba(20,30,18,0.05)' : undefined,
+      borderRadius: framed ? undefined : 'var(--app-r-m)',
+      background: framed ? undefined : 'var(--app-surface)',
+    }}>
+      <div style={{
+        width: 48,
+        height: 48,
+        borderRadius: '50%',
+        margin: '0 auto',
+        background: 'var(--app-surface-2)',
+        color: 'var(--app-ink-hint)',
+        display: 'grid',
+        placeItems: 'center',
+      }}>
+        {icon}
+      </div>
+      <div style={{ marginTop: 13, fontWeight: 850, fontSize: 'calc(15px * var(--app-fs-scale))' }}>
+        {title}
+      </div>
+      <div className="t-sm" style={{ marginTop: 6, lineHeight: 1.5 }}>
+        {desc}
+      </div>
+      {action && (
+        <button className="btn btn-primary" style={{ width: '100%', height: 46, marginTop: 16 }}>
+          {action}
+        </button>
+      )}
+    </div>
+  );
+}
+
 function PrayerRequestSummaryCard({ item }) {
   return (
     <div className="card" style={{ padding: 14, boxShadow: '0 1px 3px rgba(20,30,18,0.05)' }}>
@@ -108,7 +144,9 @@ function AdminPrayerEntry({ title, desc, count }) {
 }
 
 function ScreenPrayerList({ variant = 'general' }) {
-  const adminMode = variant === 'admin';
+  const emptyMode = variant === 'empty';
+  const adminEmptyMode = variant === 'admin-empty';
+  const adminMode = variant === 'admin' || adminEmptyMode;
   const joined = [
     { day: '월', time: '오전', members: 45, done: '34명', rate: '75%', status: '참여중' },
     { day: '목', time: '오후', members: 10, done: '승인 대기', rate: '-', status: '승인 대기' },
@@ -122,11 +160,15 @@ function ScreenPrayerList({ variant = 'general' }) {
   ];
   const adminEntries = [
     { title: '참가 신청', desc: '새 중보기도요원 승인·거절', count: 3 },
-    { title: '기도제목 통합관리', desc: '카테고리별 검토·응답완료 승인', count: 8 },
-    { title: '기도방 멤버', desc: '방별 중보기도요원 관리', count: 12 },
+    { title: '기도제목 검토', desc: '새 기도제목 승인·반려', count: 2 },
+    { title: '기도제목 통합관리', desc: '공개중·응답요청 전체 관리', count: 8 },
+    { title: '기도방 멤버 관리', desc: '내 담당 방 멤버 확인·제외', count: 12 },
     { title: '긴급 기도제목', desc: '긴급 노출 시간과 문구 관리', count: 2 },
     { title: '오프라인 요청 매칭', desc: '오프라인 요청자를 회원과 연결', count: 1 },
   ];
+  const visibleJoined = emptyMode ? [] : joined;
+  const visibleRequests = emptyMode ? [] : myRequests;
+  const visibleAdminEntries = adminEmptyMode ? [] : adminEntries;
 
   return (
     <Phone>
@@ -144,7 +186,13 @@ function ScreenPrayerList({ variant = 'general' }) {
       <div className="phone-body" style={{ paddingBottom: 168 }}>
         <Section title="내 기도방">
           <div style={{ padding: '0 18px', display: 'flex', flexDirection: 'column', gap: 10 }}>
-            {joined.map((room, i) => (
+            {visibleJoined.length === 0 ? (
+              <PrayerEmptyState
+                icon={Icon.hands(22)}
+                title="참여 중인 기도방이 없어요"
+                desc="중보기도요원으로 참여하려면 기도방을 신청해주세요."
+              />
+            ) : visibleJoined.map((room, i) => (
               <div key={i} className="card" style={{ padding: 15, display: 'flex', gap: 12, alignItems: 'center' }}>
                 <PrayerDayBadge day={room.day} time={room.time} />
                 <div style={{ flex: 1, minWidth: 0 }}>
@@ -164,17 +212,28 @@ function ScreenPrayerList({ variant = 'general' }) {
 
         <Section title="내 기도제목">
           <div style={{ padding: '0 18px', display: 'flex', flexDirection: 'column', gap: 9 }}>
-            {myRequests.slice(0, 3).map((item, i) => <PrayerRequestSummaryCard key={i} item={item} />)}
-            <button className="btn" style={{
-              width: '100%',
-              height: 48,
-              marginTop: 2,
-              backgroundColor: '#fff',
-              border: '1.5px solid var(--app-primary)',
-              color: 'var(--app-primary-deep)',
-            }}>
-              내 기도제목 전체보기
-            </button>
+            {visibleRequests.length === 0 ? (
+              <PrayerEmptyState
+                icon={Icon.plus(22)}
+                title="등록한 기도제목이 없어요"
+                desc="기도가 필요한 제목을 함께 나눠보세요."
+                action="기도제목 등록하기"
+              />
+            ) : (
+              <>
+                {visibleRequests.slice(0, 3).map((item, i) => <PrayerRequestSummaryCard key={i} item={item} />)}
+                <button className="btn" style={{
+                  width: '100%',
+                  height: 48,
+                  marginTop: 2,
+                  backgroundColor: '#fff',
+                  border: '1.5px solid var(--app-primary)',
+                  color: 'var(--app-primary-deep)',
+                }}>
+                  내 기도제목 전체보기
+                </button>
+              </>
+            )}
           </div>
         </Section>
 
@@ -213,7 +272,13 @@ function ScreenPrayerList({ variant = 'general' }) {
         {adminMode && (
           <Section title="중보기도 관리">
             <div style={{ padding: '0 18px', display: 'flex', flexDirection: 'column', gap: 9 }}>
-              {adminEntries.map((item, i) => <AdminPrayerEntry key={i} {...item} />)}
+              {visibleAdminEntries.length === 0 ? (
+                <PrayerEmptyState
+                  icon={Icon.check(22)}
+                  title="처리할 항목이 없어요"
+                  desc="새 신청이나 검토 요청이 들어오면 이곳에 표시됩니다."
+                />
+              ) : visibleAdminEntries.map((item, i) => <AdminPrayerEntry key={i} {...item} />)}
             </div>
           </Section>
         )}
@@ -240,7 +305,7 @@ function ScreenPrayerList({ variant = 'general' }) {
   );
 }
 
-function PrayerLikeMark({ liked, canLike }) {
+function PrayerLikeMark({ liked, canEncourage }) {
   const content = (
     <>
       {liked ? Icon.heartOn(15) : Icon.heart(15)}
@@ -263,18 +328,18 @@ function PrayerLikeMark({ liked, canLike }) {
     fontWeight: 850,
   };
 
-  if (canLike) {
+  if (canEncourage) {
     return (
-      <button className="btn" style={{ ...style, padding: 0 }} aria-label="관리자 좋아요">
+      <button className="btn" style={{ ...style, padding: 0 }} aria-label="팀장 좋아요">
         {content}
       </button>
     );
   }
 
-  return <div style={style} aria-label="관리자 좋아요 상태">{content}</div>;
+  return <div style={style} aria-label="팀장 좋아요 상태">{content}</div>;
 }
 
-function PrayerCompletionRow({ person, canLike }) {
+function PrayerCompletionRow({ person, canEncourage }) {
   return (
     <div style={{
       display: 'flex',
@@ -293,7 +358,7 @@ function PrayerCompletionRow({ person, canLike }) {
         </div>
         <div className="t-xs" style={{ marginTop: 2 }}>{person.time} 완료</div>
       </div>
-      <PrayerLikeMark liked={person.liked} canLike={canLike} />
+      <PrayerLikeMark liked={person.liked} canEncourage={canEncourage} />
     </div>
   );
 }
@@ -376,9 +441,14 @@ function PrayerItem({ item, answer }) {
 }
 
 function ScreenPrayerDetail({ variant = 'pray' }) {
-  const answerMode = variant === 'answers';
-  const statusMode = variant === 'status' || variant === 'admin';
-  const adminMode = variant === 'admin';
+  const prayEmptyMode = variant === 'pray-empty';
+  const completedMode = variant === 'pray-completed';
+  const answerMode = variant === 'answers' || variant === 'answers-empty';
+  const answerEmptyMode = variant === 'answers-empty';
+  const statusEmptyMode = variant === 'status-empty';
+  const leaderStatusMode = variant === 'leader-status';
+  const statusMode = variant === 'status' || variant === 'admin' || statusEmptyMode || leaderStatusMode;
+  const canEncourage = leaderStatusMode;
   const activeTab = statusMode ? 'status' : answerMode ? 'answers' : 'pray';
   const urgent = [
     { category: '치유', title: '수술 후 회복을 위해', author: '박지훈', text: '어머니 수술 후 회복 과정이 안정되도록 함께 기도해주세요.', when: '오늘', urgent: true },
@@ -392,7 +462,12 @@ function ScreenPrayerDetail({ variant = 'pray' }) {
     { category: '일반', title: '가족 대화 회복', author: '정하은', text: '대화가 끊겼던 가족과의 회복을 위해 함께 기도했던 제목입니다.', answer: '서로 이야기를 시작했고 함께 예배드리기로 했습니다.', when: '3일 전', answeredDaysAgo: 3 },
     { category: '구원', title: '예배 자리 회복', author: '오지연', text: '예배의 기쁨을 다시 회복하기 위해 함께 기도했던 제목입니다.', answer: '주일 예배와 목장 모임에 다시 참여했습니다.', when: '9일 전', answeredDaysAgo: 9 },
   ];
-  const recentAnswers = answers.filter(item => item.answeredDaysAgo <= 7);
+  const visibleUrgent = prayEmptyMode ? [] : urgent;
+  const visibleProgress = prayEmptyMode ? [] : progress;
+  const visibleAnswers = answerEmptyMode ? [] : answers;
+  const recentAnswers = (prayEmptyMode ? [] : answers).filter(item => item.answeredDaysAgo <= 7);
+  const visibleCompletions = statusEmptyMode ? [] : PRAYER_COMPLETIONS;
+  const visiblePending = statusEmptyMode ? [] : PRAYER_PENDING_MEMBERS;
   return (
     <Phone>
       <TopBar title="월요일 오전 기도방" />
@@ -401,6 +476,8 @@ function ScreenPrayerDetail({ variant = 'pray' }) {
         <span className="badge badge-primary">참여중</span>
         <span className="badge badge-mute">멤버 45명</span>
         <span className="badge badge-amber">오늘 긴급 1건</span>
+        {completedMode && <span className="badge badge-primary">오늘 완료</span>}
+        {leaderStatusMode && <span className="badge badge-primary">요일별 팀장</span>}
       </div>
 
       <UnderlineTabs
@@ -426,9 +503,9 @@ function ScreenPrayerDetail({ variant = 'pray' }) {
               </div>
 
               <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
-                <PrayerStat label="완료" value="34명" tone="var(--app-primary-soft)" />
-                <PrayerStat label="미완료" value="11명" />
-                <PrayerStat label="참여율" value="75%" />
+                <PrayerStat label="완료" value={statusEmptyMode ? '0명' : '34명'} tone="var(--app-primary-soft)" />
+                <PrayerStat label="미완료" value={statusEmptyMode ? '0명' : '11명'} />
+                <PrayerStat label="참여율" value={statusEmptyMode ? '-' : '75%'} />
               </div>
 
               <div style={{ marginTop: 12 }}>
@@ -439,7 +516,7 @@ function ScreenPrayerDetail({ variant = 'pray' }) {
                   overflow: 'hidden',
                 }}>
                   <div style={{
-                    width: '75%',
+                    width: statusEmptyMode ? '0%' : '75%',
                     height: '100%',
                     borderRadius: 'inherit',
                     background: 'var(--app-primary)',
@@ -451,45 +528,78 @@ function ScreenPrayerDetail({ variant = 'pray' }) {
             <div className="card" style={{ padding: 15 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8, marginBottom: 2 }}>
                 <div style={{ fontWeight: 850, fontSize: 'calc(14px * var(--app-fs-scale))' }}>기도 완료한 사람</div>
-                <div className="t-xs">34명</div>
+                <div className="t-xs">{visibleCompletions.length}명</div>
               </div>
-              {PRAYER_COMPLETIONS.map((person, i) => <PrayerCompletionRow key={i} person={person} canLike={adminMode} />)}
+              {visibleCompletions.length === 0 ? (
+                <PrayerEmptyState
+                  icon={Icon.hands(22)}
+                  title="기도 완료 현황이 없어요"
+                  desc="기도방 참여자가 생기면 완료 여부가 이곳에 표시됩니다."
+                  framed={false}
+                />
+              ) : visibleCompletions.map((person, i) => <PrayerCompletionRow key={i} person={person} canEncourage={canEncourage} />)}
 
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8, marginTop: 14, marginBottom: 2 }}>
-                <div style={{ fontWeight: 850, fontSize: 'calc(14px * var(--app-fs-scale))' }}>아직 완료 전</div>
-                <div className="t-xs">11명</div>
-              </div>
-              {PRAYER_PENDING_MEMBERS.map((person, i) => <PrayerPendingRow key={i} person={person} />)}
+              {visiblePending.length > 0 && (
+                <>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8, marginTop: 14, marginBottom: 2 }}>
+                    <div style={{ fontWeight: 850, fontSize: 'calc(14px * var(--app-fs-scale))' }}>아직 완료 전</div>
+                    <div className="t-xs">{visiblePending.length}명</div>
+                  </div>
+                  {visiblePending.map((person, i) => <PrayerPendingRow key={i} person={person} />)}
+                </>
+              )}
             </div>
           </div>
         ) : !answerMode ? (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-            <Section title="긴급 기도제목">
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                {urgent.map((item, i) => <PrayerItem key={i} item={item} />)}
-              </div>
-            </Section>
+            {visibleUrgent.length === 0 && visibleProgress.length === 0 ? (
+              <PrayerEmptyState
+                icon={Icon.hands(22)}
+                title="기도할 제목이 없어요"
+                desc="새 기도제목이 승인되면 이곳에 표시됩니다."
+              />
+            ) : (
+              <>
+                <Section title="긴급 기도제목">
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                    {visibleUrgent.map((item, i) => <PrayerItem key={i} item={item} />)}
+                  </div>
+                </Section>
 
-            <Section title="진행 중 기도제목">
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                {progress.map((item, i) => <PrayerItem key={i} item={item} />)}
-              </div>
-            </Section>
+                <Section title="최근 기도응답">
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                    {recentAnswers.length === 0 ? (
+                      <PrayerEmptyState
+                        icon={Icon.check(22)}
+                        title="최근 기도응답이 없어요"
+                        desc="일주일 안에 응답완료된 기도제목이 있으면 이곳에 표시됩니다."
+                      />
+                    ) : recentAnswers.map((item, i) => <PrayerItem key={i} item={item} answer />)}
+                  </div>
+                </Section>
 
-            <Section title="최근 기도응답">
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                {recentAnswers.map((item, i) => <PrayerItem key={i} item={item} answer />)}
-              </div>
-            </Section>
+                <Section title="진행 중 기도제목">
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                    {visibleProgress.map((item, i) => <PrayerItem key={i} item={item} />)}
+                  </div>
+                </Section>
+              </>
+            )}
           </div>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-            {answers.map((item, i) => <PrayerItem key={i} item={item} answer />)}
+            {visibleAnswers.length === 0 ? (
+              <PrayerEmptyState
+                icon={Icon.check(22)}
+                title="응답완료된 기도제목이 없어요"
+                desc="응답완료 처리된 기도제목은 최신순으로 이곳에 표시됩니다."
+              />
+            ) : visibleAnswers.map((item, i) => <PrayerItem key={i} item={item} answer />)}
           </div>
         )}
       </div>
 
-      {activeTab === 'pray' && (
+      {activeTab === 'pray' && !prayEmptyMode && (
         <div style={{
           position: 'absolute',
           left: 18,
@@ -497,8 +607,14 @@ function ScreenPrayerDetail({ variant = 'pray' }) {
           bottom: 24,
           zIndex: 5,
         }}>
-          <button className="btn btn-primary" style={{ width: '100%', height: 52 }}>
-            {Icon.check(18)} 오늘 기도 완료
+          <button className={completedMode ? 'btn' : 'btn btn-primary'} style={{
+            width: '100%',
+            height: 52,
+            background: completedMode ? 'var(--app-primary-soft)' : undefined,
+            color: completedMode ? 'var(--app-primary-deep)' : undefined,
+            border: completedMode ? '1px solid rgba(91,122,176,0.22)' : undefined,
+          }}>
+            {Icon.check(18)} {completedMode ? '오늘 기도 완료됨' : '오늘 기도 완료'}
           </button>
         </div>
       )}

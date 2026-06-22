@@ -91,13 +91,12 @@ function ScreenHome() {
         {/* 중보기도 카드 (2-col) */}
         <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap: 10, padding:'8px 18px 0' }}>
           {/* 오늘 기도제목 */}
-          <div className="card" style={{ padding: 16, position:'relative', overflow:'hidden' }}>
-            <div className="t-xs" style={{ fontWeight: 600, color:'var(--app-ink-mute)' }}>오늘 기도제목</div>
-            <div style={{ display:'flex', alignItems:'baseline', gap: 4, marginTop: 6 }}>
-              <span style={{ fontSize: 'calc(28px * var(--app-fs-scale))', fontWeight: 800, color:'var(--app-primary-deep)', lineHeight: 1, letterSpacing:'-0.02em' }}>12</span>
-              <span className="t-sm" style={{ fontWeight: 600 }}>개</span>
+          <div className="card" style={{ minHeight: 124, padding: 16, position:'relative', overflow:'hidden' }}>
+            <div className="t-xs" style={{ fontWeight: 700, color:'var(--app-ink-mute)' }}>오늘의 기도제목</div>
+            <div style={{ marginTop: 8, fontWeight: 850, fontSize:'calc(14px * var(--app-fs-scale))', lineHeight: 1.45, color:'var(--app-primary-deep)' }}>
+              가정과 일터에서 믿음의 선택을 하도록 기도합니다.
             </div>
-            <div className="t-xs" style={{ marginTop: 8 }}>월요일 오전 기도방</div>
+            <div className="t-xs" style={{ marginTop: 8 }}>월요일 공통 기도제목</div>
             <div style={{ position:'absolute', right: -8, top: -8, color:'var(--app-primary-soft)' }}>
               {Icon.pray(48)}
             </div>

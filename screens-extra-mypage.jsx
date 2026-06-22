@@ -139,7 +139,8 @@ function ActivityEmpty() {
   );
 }
 
-function ScreenPrayerVolunteerHistory() {
+function ScreenPrayerVolunteerHistory({ variant = 'default' }) {
+  const emptyMode = variant === 'empty';
   const current = {
     room: '월요일 오전 기도방',
     role: '중보기도요원',
@@ -174,47 +175,72 @@ function ScreenPrayerVolunteerHistory() {
           내가 언제부터 어떤 기도방에서 중보기도요원으로 활동했는지 확인합니다.
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
-          <Metric label="현재 활동" value="1개"/>
-          <Metric label="누적 기간" value="9개월"/>
-          <Metric label="기도방" value="3곳"/>
-        </div>
-
-        <div className="card" style={{ marginTop: 14, padding: 16, boxShadow: '0 1px 3px rgba(20,30,18,0.05)' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', gap: 10, alignItems: 'center' }}>
-            <div style={{ fontWeight: 850, fontSize: 'calc(15px * var(--app-fs-scale))' }}>현재 활동</div>
-            <span className="badge badge-primary">참여중</span>
-          </div>
-          <div style={{ marginTop: 12, fontWeight: 850, fontSize: 'calc(18px * var(--app-fs-scale))' }}>{current.room}</div>
-          <div className="t-sm" style={{ marginTop: 7 }}>{current.role} · {current.since}부터</div>
-          <div className="t-xs" style={{ marginTop: 8 }}>{current.duration}</div>
-        </div>
-
-        <div style={{ marginTop: 22, marginBottom: 8, fontWeight: 850, fontSize: 'calc(16px * var(--app-fs-scale))' }}>지난 활동</div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-          {histories.map((item, i) => (
-            <div key={i} className="card" style={{ padding: 15, boxShadow: '0 1px 3px rgba(20,30,18,0.05)' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', gap: 10, alignItems: 'flex-start' }}>
-                <div style={{ minWidth: 0 }}>
-                  <div style={{ fontWeight: 850, fontSize: 'calc(15px * var(--app-fs-scale))' }}>{item.room}</div>
-                  <div className="t-sm" style={{ marginTop: 5 }}>{item.role}</div>
-                </div>
-                <span className="badge badge-mute">종료</span>
-              </div>
-              <div style={{
-                marginTop: 12,
-                paddingTop: 10,
-                borderTop: '1px solid var(--app-line)',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 5,
-              }}>
-                <div className="t-sm">{item.period}</div>
-                <div className="t-xs">{item.reason}</div>
-              </div>
+        {emptyMode ? (
+          <div className="card" style={{ padding: '30px 18px', textAlign: 'center', boxShadow: '0 1px 3px rgba(20,30,18,0.05)' }}>
+            <div style={{
+              width: 56,
+              height: 56,
+              borderRadius: '50%',
+              margin: '0 auto',
+              background: 'var(--app-surface-2)',
+              color: 'var(--app-ink-hint)',
+              display: 'grid',
+              placeItems: 'center',
+            }}>
+              {Icon.hands(25)}
             </div>
-          ))}
-        </div>
+            <div style={{ marginTop: 14, fontWeight: 850, fontSize: 'calc(16px * var(--app-fs-scale))' }}>
+              중보기도 활동 이력이 없어요
+            </div>
+            <div className="t-sm" style={{ marginTop: 7, lineHeight: 1.55 }}>
+              기도방 참여가 승인되면 활동 기간과 참여했던 방이 이곳에 기록됩니다.
+            </div>
+          </div>
+        ) : (
+          <>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
+              <Metric label="현재 활동" value="1개"/>
+              <Metric label="누적 기간" value="9개월"/>
+              <Metric label="기도방" value="3곳"/>
+            </div>
+
+            <div className="card" style={{ marginTop: 14, padding: 16, boxShadow: '0 1px 3px rgba(20,30,18,0.05)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', gap: 10, alignItems: 'center' }}>
+                <div style={{ fontWeight: 850, fontSize: 'calc(15px * var(--app-fs-scale))' }}>현재 활동</div>
+                <span className="badge badge-primary">참여중</span>
+              </div>
+              <div style={{ marginTop: 12, fontWeight: 850, fontSize: 'calc(18px * var(--app-fs-scale))' }}>{current.room}</div>
+              <div className="t-sm" style={{ marginTop: 7 }}>{current.role} · {current.since}부터</div>
+              <div className="t-xs" style={{ marginTop: 8 }}>{current.duration}</div>
+            </div>
+
+            <div style={{ marginTop: 22, marginBottom: 8, fontWeight: 850, fontSize: 'calc(16px * var(--app-fs-scale))' }}>지난 활동</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              {histories.map((item, i) => (
+                <div key={i} className="card" style={{ padding: 15, boxShadow: '0 1px 3px rgba(20,30,18,0.05)' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', gap: 10, alignItems: 'flex-start' }}>
+                    <div style={{ minWidth: 0 }}>
+                      <div style={{ fontWeight: 850, fontSize: 'calc(15px * var(--app-fs-scale))' }}>{item.room}</div>
+                      <div className="t-sm" style={{ marginTop: 5 }}>{item.role}</div>
+                    </div>
+                    <span className="badge badge-mute">종료</span>
+                  </div>
+                  <div style={{
+                    marginTop: 12,
+                    paddingTop: 10,
+                    borderTop: '1px solid var(--app-line)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 5,
+                  }}>
+                    <div className="t-sm">{item.period}</div>
+                    <div className="t-xs">{item.reason}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
 
         <div className="t-sm" style={{ marginTop: 14, lineHeight: 1.5, color: 'var(--app-ink-mute)' }}>
           관리자 승인, 기도방 이동, 활동 종료 기록을 기준으로 표시됩니다.

@@ -169,9 +169,9 @@ function ScreenPrayerApply() {
 
 function ScreenPrayerApproval() {
   const applications = [
-    { name: '김은혜', room: '화요일 오후 기도방', requestedAt: '오늘 10:24', status: '승인 대기', tone: 'badge-amber', active: true },
-    { name: '박지훈', room: '목요일 오전 기도방', requestedAt: '어제 18:12', status: '승인 완료', tone: 'badge-primary', active: false },
-    { name: '이서연', room: '토요일 오후 기도방', requestedAt: '어제 09:40', status: '거절됨', tone: 'badge-mute', active: false },
+    { name: '김은혜', room: '화요일 오후 기도방', requestedAt: '오늘 10:24', memo: '화요일 오후 시간이 가장 꾸준히 참여 가능합니다.', status: '승인 대기', tone: 'badge-amber', active: true },
+    { name: '박지훈', room: '목요일 오전 기도방', requestedAt: '어제 18:12', memo: '출근 전 기도방 참여를 희망합니다.', status: '승인 완료', tone: 'badge-primary', active: false },
+    { name: '이서연', room: '토요일 오후 기도방', requestedAt: '어제 09:40', memo: '격주로 가능한 상황이라 상담이 필요합니다.', status: '거절됨', tone: 'badge-mute', active: false },
   ];
 
   return (
@@ -209,6 +209,7 @@ function ScreenPrayerApproval() {
                   </div>
                   <div style={{ marginTop: 9, fontWeight: 850, fontSize: 'calc(16px * var(--app-fs-scale))' }}>{item.name}</div>
                   <div className="t-sm" style={{ marginTop: 5 }}>{item.room}</div>
+                  <div className="t-xs" style={{ marginTop: 7, lineHeight: 1.45 }}>신청 메모: {item.memo}</div>
                 </div>
                 {Icon.chevron(18)}
               </div>
@@ -393,10 +394,39 @@ function ScreenPrayerMembers({ variant = 'default' }) {
 }
 
 function ScreenPrayerModeration() {
+  const reviewItems = [
+    { title: '어머니 수술 후 회복', requester: '박지훈', category: '치유', time: '오늘 08:20', selected: true },
+    { title: '아버지의 예배 회복', requester: '정하은', category: '구원', time: '오늘 07:42' },
+  ];
+
   return (
     <Phone>
       <TopBar title="기도제목 검토" />
       <div className="phone-body" style={{ padding: '4px 18px 112px' }}>
+        <div className="card" style={{ padding: 15, marginBottom: 14, boxShadow: '0 1px 3px rgba(20,30,18,0.05)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', gap: 10, alignItems: 'center', marginBottom: 10 }}>
+            <div style={{ fontWeight: 850, fontSize: 'calc(14px * var(--app-fs-scale))' }}>검토중 목록</div>
+            <span className="badge badge-amber">2건</span>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            {reviewItems.map((item, i) => (
+              <div key={i} style={{
+                padding: '10px 12px',
+                borderRadius: 'var(--app-r-s)',
+                border: item.selected ? '1.5px solid var(--app-primary)' : '1px solid var(--app-line)',
+                background: item.selected ? 'var(--app-primary-soft)' : '#fff',
+              }}>
+                <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap', marginBottom: 5 }}>
+                  <span className="badge badge-mute">{item.category}</span>
+                  <span className="badge badge-amber">검토중</span>
+                </div>
+                <div style={{ fontWeight: 800, fontSize: 'calc(13px * var(--app-fs-scale))' }}>{item.title}</div>
+                <div className="t-xs" style={{ marginTop: 3 }}>{item.requester} · {item.time}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
         <div style={{ display: 'flex', gap: 8, marginBottom: 14 }}>
           <span className="badge badge-amber">접수</span>
           <span className="badge badge-mute">치유</span>
@@ -447,8 +477,53 @@ function ScreenPrayerModeration() {
   );
 }
 
+function ScreenPrayerAnswerApproval() {
+  return (
+    <Phone>
+      <TopBar title="응답완료 검토" />
+      <div className="phone-body" style={{ padding: '4px 18px 112px' }}>
+        <div style={{ display: 'flex', gap: 8, marginBottom: 14, flexWrap: 'wrap' }}>
+          <span className="badge badge-mute">치유</span>
+          <span className="badge badge-amber">응답완료 요청중</span>
+          <span className="badge badge-mute">요청 어제 19:10</span>
+        </div>
+
+        <div className="card" style={{ padding: 15, boxShadow: '0 1px 3px rgba(20,30,18,0.05)' }}>
+          <div className="t-xs">원 기도제목</div>
+          <div style={{ marginTop: 8, fontWeight: 850, fontSize: 'calc(15px * var(--app-fs-scale))' }}>수술 후 회복</div>
+          <div className="t-xs" style={{ marginTop: 5, display: 'flex', alignItems: 'center', gap: 4, color: 'var(--app-ink-soft)' }}>
+            {Icon.user(13)}
+            <span>작성자 박지훈 · 공개중</span>
+          </div>
+          <div className="t-sm" style={{ marginTop: 8, lineHeight: 1.6 }}>
+            수술 후 회복과 가족의 평안을 위해 함께 기도했던 제목입니다.
+          </div>
+        </div>
+
+        <div className="card" style={{ marginTop: 14, padding: 15, background: 'var(--app-primary-soft)', boxShadow: 'none' }}>
+          <div className="t-xs" style={{ color: 'var(--app-primary-deep)' }}>요청자가 입력한 응답 내용</div>
+          <div className="t-sm" style={{ marginTop: 8, color: 'var(--app-primary-deep)', lineHeight: 1.6 }}>
+            회복 경과가 안정적이고 가족들도 평안한 마음으로 지내고 있습니다. 기도해주셔서 감사합니다.
+          </div>
+        </div>
+
+        <div style={{ marginTop: 14 }}>
+          <div className="t-sm" style={{ marginBottom: 7, fontWeight: 700, color: 'var(--app-ink-soft)' }}>반려 사유</div>
+          <PrayerInput placeholder="반려 시 작성자에게 보여줄 사유를 입력합니다" />
+          <FieldHint>승인하면 응답 탭에 최신순으로 표시되고, 반려하면 공개중 상태로 돌아갑니다</FieldHint>
+        </div>
+      </div>
+      <div className="bottom-bar" style={{ bottom: 14 }}>
+        <button className="btn btn-line" style={{ flex: 1 }}>반려</button>
+        <button className="btn btn-primary" style={{ flex: 1 }}>승인</button>
+      </div>
+    </Phone>
+  );
+}
+
 function ScreenPrayerTopicManage() {
   const [selectedCategory, setSelectedCategory] = useState('구원');
+  const [selectedStatus, setSelectedStatus] = useState('전체');
   const owners = {
     구원: '김하늘 관리자',
     치유: '박은혜 관리자',
@@ -461,13 +536,21 @@ function ScreenPrayerTopicManage() {
     { category: '치유', title: '수술 후 회복', requester: '박지훈', status: '응답완료 요청중', tone: 'badge-mute', time: '어제 19:10' },
     { category: '자녀', title: '자녀 학교 적응', requester: '한수연', status: '응답완료', tone: 'badge-primary', time: '어제 10:35' },
     { category: '일반', title: '공동체 적응 감사', requester: '이준호', status: '반려', tone: 'badge-rose', time: '2일 전' },
+    { category: '구원', title: '가족 대화 회복', requester: '오지연', status: '숨김', tone: 'badge-mute', time: '3일 전' },
   ];
-  const visibleTopics = topics.filter(t => t.category === selectedCategory);
+  const statuses = ['전체', '공개중', '응답완료 요청중', '응답완료', '반려', '숨김'];
+  const visibleTopics = topics.filter(t => (
+    t.category === selectedCategory && (selectedStatus === '전체' || t.status === selectedStatus)
+  ));
 
   return (
     <Phone>
       <TopBar title="기도제목 통합관리" />
       <div className="phone-body" style={{ padding: '4px 18px 22px' }}>
+        <div style={{ marginBottom: 12 }}>
+          <PrayerInput placeholder="기도제목 또는 작성자 검색" />
+        </div>
+
         <div style={{ display: 'flex', gap: 7, flexWrap: 'wrap', marginBottom: 14 }}>
           {PRAYER_CATEGORIES.map(category => {
             const on = category === selectedCategory;
@@ -479,6 +562,22 @@ function ScreenPrayerTopicManage() {
                 style={{ border: 0 }}
               >
                 {category}
+              </button>
+            );
+          })}
+        </div>
+
+        <div style={{ display: 'flex', gap: 7, flexWrap: 'wrap', marginBottom: 14 }}>
+          {statuses.map(status => {
+            const on = status === selectedStatus;
+            return (
+              <button
+                key={status}
+                className={'chip' + (on ? ' on' : '')}
+                onClick={() => setSelectedStatus(status)}
+                style={{ border: 0 }}
+              >
+                {status}
               </button>
             );
           })}
@@ -510,9 +609,23 @@ function ScreenPrayerTopicManage() {
                     <span className={`badge ${topic.tone}`}>{topic.status}</span>
                   </div>
                   <div style={{ marginTop: 9, fontWeight: 850, fontSize: 'calc(15px * var(--app-fs-scale))' }}>{topic.title}</div>
-                  <div className="t-sm" style={{ marginTop: 5 }}>{topic.requester} · {topic.time}</div>
+                  <div className="t-sm" style={{ marginTop: 5 }}>{topic.requester} · 최근 변경 {topic.time}</div>
                 </div>
                 {Icon.chevron(18)}
+              </div>
+              <div style={{
+                marginTop: 12,
+                paddingTop: 10,
+                borderTop: '1px solid var(--app-line)',
+                display: 'flex',
+                justifyContent: 'space-between',
+                gap: 8,
+                alignItems: 'center',
+              }}>
+                <div className="t-xs">공개 내용, 상태, 카테고리, 처리 이력 확인</div>
+                <button className="btn btn-line btn-sm" style={{ minWidth: 64 }}>
+                  {topic.status === '숨김' ? '복구' : '숨김'}
+                </button>
               </div>
             </div>
           ))}
@@ -527,6 +640,7 @@ function ScreenPrayerUrgentManage() {
     <Phone>
       <TopBar title="긴급 기도제목 관리" />
       <div className="phone-body" style={{ padding: '4px 18px 112px' }}>
+        <div style={{ marginBottom: 8, fontWeight: 850, fontSize: 'calc(15px * var(--app-fs-scale))' }}>현재 노출 중</div>
         <div className="card" style={{ padding: 15, marginBottom: 16 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, alignItems: 'center' }}>
             <div>
@@ -537,6 +651,17 @@ function ScreenPrayerUrgentManage() {
               <div style={{ position: 'absolute', top: 2, right: 2, width: 20, height: 20, borderRadius: '50%', background: '#fff' }} />
             </div>
           </div>
+        </div>
+
+        <div style={{ marginBottom: 8, fontWeight: 850, fontSize: 'calc(15px * var(--app-fs-scale))' }}>긴급 요청 목록</div>
+        <div className="card" style={{ padding: 15, marginBottom: 16, border: '1px solid rgba(216,131,92,0.34)' }}>
+          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+            <span className="badge badge-amber">{Icon.flame(11)} 긴급 요청</span>
+            <span className="badge badge-mute">치유</span>
+            <span className="badge badge-mute">접수 오늘 08:20</span>
+          </div>
+          <div style={{ marginTop: 10, fontWeight: 850, fontSize: 'calc(15px * var(--app-fs-scale))' }}>급한 수술 일정</div>
+          <div className="t-sm" style={{ marginTop: 6, lineHeight: 1.55 }}>급한 수술 일정을 앞두고 평안과 회복을 위해 기도해주세요.</div>
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
@@ -586,9 +711,11 @@ function ScreenPrayerOfflineMatch() {
           <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
             <span className="badge badge-amber">미매칭</span>
             <span className="badge badge-mute">오프라인 접수</span>
+            <span className="badge badge-mute">구원</span>
           </div>
           <div style={{ marginTop: 10, fontWeight: 850, fontSize: 'calc(15px * var(--app-fs-scale))' }}>가족의 신앙 회복</div>
           <div className="t-sm" style={{ marginTop: 7, lineHeight: 1.55 }}>요청자: 김은혜 · 연락처 뒷자리 6789</div>
+          <div className="t-xs" style={{ marginTop: 6 }}>앱 외부 접수 요청을 회원 기도제목 흐름에 연결합니다.</div>
         </div>
 
         <div>
@@ -623,6 +750,10 @@ function ScreenPrayerOfflineMatch() {
         }}>
           매칭 후에는 선택된 사용자의 기도제목으로 연결되고 수정 요청·응답 완료 요청 흐름을 적용할 수 있습니다.
         </div>
+
+        <button className="btn btn-line" style={{ width: '100%', height: 48, marginTop: 12 }}>
+          비회원 요청자로 관리
+        </button>
       </div>
     </Phone>
   );
@@ -723,6 +854,17 @@ function ScreenPrayerWrite({ variant = 'create' }) {
       <TopBar title="기도제목 등록" />
       <div className="phone-body" style={{ padding: '4px 18px 112px' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 17 }}>
+          <div style={{
+            padding: 14,
+            borderRadius: 'var(--app-r-m)',
+            background: 'var(--app-primary-soft)',
+            color: 'var(--app-primary-deep)',
+            fontSize: 'calc(13px * var(--app-fs-scale))',
+            lineHeight: 1.55,
+          }}>
+            등록 후 검토중 상태로 저장되고, 관리자 승인 전까지 내 기도제목에서 수정할 수 있습니다.
+          </div>
+
           <div>
             <div className="t-sm" style={{ marginBottom: 7, fontWeight: 700, color: 'var(--app-ink-soft)' }}>카테고리</div>
             <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
@@ -775,6 +917,6 @@ function ScreenPrayerWrite({ variant = 'create' }) {
 
 Object.assign(window, {
   ScreenPrayerApply, ScreenPrayerApproval, ScreenPrayerMembers,
-  ScreenPrayerModeration, ScreenPrayerTopicManage, ScreenPrayerUrgentManage, ScreenPrayerOfflineMatch,
+  ScreenPrayerModeration, ScreenPrayerAnswerApproval, ScreenPrayerTopicManage, ScreenPrayerUrgentManage, ScreenPrayerOfflineMatch,
   ScreenPrayerRequest, ScreenPrayerWrite,
 });
