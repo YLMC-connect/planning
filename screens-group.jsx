@@ -27,54 +27,82 @@ const GP_LIST = [
   { id:6, name:'찬양 동아리',     cat:'hobby',  desc:'함께 찬양하고 연주하며 마음을 모아요. 매주 금요일 저녁 7시에 모입니다.', cur:15, max:15, status:'closed', seed:5 },
 ];
 
+const COMPANION_TABS = [
+  { key: 'groups', label: '소모임' },
+  { key: 'service', label: '봉사' },
+];
+
+const SERVICE_LIST = [
+  { id: 1, name: '주방 봉사팀', desc: '주일 점심 준비와 정리를 함께 섬깁니다.', schedule: '주일 10:30', cur: 18, max: 24, status: '모집중', seed: 2 },
+  { id: 2, name: '성가대 신입 모집', desc: '찬양으로 예배를 섬길 성도를 기다립니다.', schedule: '주일 08:40', cur: 5, max: 10, status: '모집중', seed: 5 },
+  { id: 3, name: '어르신 돌봄 봉사', desc: '월 2회 인근 요양원을 방문해 교제합니다.', schedule: '둘째·넷째 토요일', cur: 8, max: 12, status: '모집중', seed: 4 },
+];
+
 // ─────────────────────────────────────────────────────────────
 // 20. 소모임 목록 (FUNC-021)
-//   variants: all (default) | mine | mine-empty | network-error
+//   variants: all (default) | my-full | network-error
 // ─────────────────────────────────────────────────────────────
 function ScreenGroupList({ variant = 'all' }) {
-  const isMine = variant === 'mine' || variant === 'mine-empty';
-  const isEmpty = variant === 'mine-empty';
+  const isMyFull = variant === 'my-full';
   const isError = variant === 'network-error';
 
-  const list = isError
-    ? []
-    : isMine
-      ? (isEmpty ? [] : GP_LIST.filter(g => [1, 2, 3].includes(g.id)))
-      : GP_LIST;
+  const myGroups = isError ? [] : GP_LIST.filter(g => [1, 2, 3].includes(g.id));
+  const allGroups = isError ? [] : GP_LIST;
+
+  if (isMyFull) {
+    return (
+      <Phone>
+        <TopBar title="내 소모임" backLabel="동행" />
+        <div className="phone-body" style={{ padding: 0 }}>
+          <div style={{ padding: '6px 18px 12px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+            {myGroups.map(g => <GroupCard key={g.id} g={g}/>)}
+          </div>
+        </div>
+      </Phone>
+    );
+  }
 
   return (
     <Phone>
       <div className="phone-topbar">
         <div style={{ flex: 1 }}>
-          <div className="title">소모임</div>
+          <div className="title">동행</div>
         </div>
         <div className="actions">
           <div style={{ width: 36, height: 36, display: 'grid', placeItems: 'center', color: 'var(--app-ink-soft)' }}>{Icon.search()}</div>
         </div>
       </div>
 
-      {/* 상단 탭 */}
-      <div style={{ padding: '4px 0 10px' }}>
-        <SegTabs
-          items={[{ key: 'all', label: '전체' }, { key: 'mine', label: '내 소모임' }]}
-          active={isMine ? 'mine' : 'all'}
-        />
-      </div>
-
-      {/* 카테고리 칩 */}
-      <div style={{ padding: '0 0 6px' }}>
-        <ChipRow items={GP_CATS} active="all"/>
+      <div style={{ padding: '0 0 10px' }}>
+        <SegTabs items={COMPANION_TABS} active="groups" />
       </div>
 
       <div className="phone-body" style={{ padding: 0 }}>
         {isError ? (
           <ErrorState/>
-        ) : list.length === 0 ? (
-          <EmptyMine/>
         ) : (
-          <div style={{ padding: '6px 18px 12px', display: 'flex', flexDirection: 'column', gap: 12 }}>
-            {list.map(g => <GroupCard key={g.id} g={g}/>)}
-          </div>
+          <>
+            <Section title="내 소모임" more="전체보기">
+              <div style={{ display: 'flex', gap: 12, overflowX: 'auto', padding: '0 18px 6px', scrollbarWidth: 'none' }}>
+                {myGroups.slice(0, 3).map(g => (
+                  <div key={g.id} className="card" style={{ width: 214, padding: 14, flexShrink: 0 }}>
+                    <Cover w={186} h={78} seed={g.seed} />
+                    <div style={{ marginTop: 10, fontWeight: 850, fontSize: 'calc(14px * var(--app-fs-scale))' }}>{g.name}</div>
+                    <div className="t-xs" style={{ marginTop: 5 }}>멤버 {g.cur}명 · {GP_CATS.find(c => c.key === g.cat)?.label || '기타'}</div>
+                  </div>
+                ))}
+              </div>
+            </Section>
+
+            <Section title="전체 모임">
+              <div style={{ padding: '0 0 6px' }}>
+                <ChipRow items={GP_CATS} active="all"/>
+              </div>
+              <div style={{ padding: '6px 18px 12px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+                {allGroups.map(g => <GroupCard key={g.id} g={g}/>)}
+              </div>
+            </Section>
+          </>
         )}
       </div>
 
@@ -93,7 +121,50 @@ function ScreenGroupList({ variant = 'all' }) {
         개설
       </button>
 
-      <TabBar active="group"/>
+      <TabBar active="companion"/>
+    </Phone>
+  );
+}
+
+function ScreenServiceList() {
+  return (
+    <Phone>
+      <div className="phone-topbar">
+        <div style={{ flex: 1 }}>
+          <div className="title">동행</div>
+        </div>
+        <div className="actions">
+          <div style={{ width: 36, height: 36, display: 'grid', placeItems: 'center', color: 'var(--app-ink-soft)' }}>{Icon.search()}</div>
+        </div>
+      </div>
+
+      <div style={{ padding: '0 0 10px' }}>
+        <SegTabs items={COMPANION_TABS} active="service" />
+      </div>
+
+      <div className="phone-body" style={{ padding: 0 }}>
+        <div style={{ padding: '6px 18px 12px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+          {SERVICE_LIST.map(item => (
+            <div key={item.id} className="card" style={{ padding: 16 }}>
+              <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+                <Thumb size={62} seed={item.seed} icon={Icon.hands(24)} />
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+                    <span className="badge badge-primary">{item.status}</span>
+                    <span className="t-xs">{item.schedule}</span>
+                  </div>
+                  <div style={{ marginTop: 7, fontWeight: 850, fontSize: 'calc(16px * var(--app-fs-scale))' }}>{item.name}</div>
+                  <div className="t-sm" style={{ marginTop: 5, lineHeight: 1.5 }}>{item.desc}</div>
+                  <div className="t-xs" style={{ marginTop: 8 }}>참여 {item.cur}/{item.max}명</div>
+                </div>
+                {Icon.chevron(18)}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <TabBar active="companion"/>
     </Phone>
   );
 }
@@ -469,7 +540,7 @@ function MembersIcon({ size = 18 }) {
 }
 
 Object.assign(window, {
-  ScreenGroupList, ScreenGroupDetail,
-  GP_CATS, GP_LIST, recruitBadge,
+  ScreenGroupList, ScreenServiceList, ScreenGroupDetail,
+  GP_CATS, GP_LIST, SERVICE_LIST, recruitBadge,
   NoticeIcon, MembersIcon,
 });

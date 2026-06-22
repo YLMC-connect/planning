@@ -92,13 +92,13 @@ const BACK_PILL_STYLE = {
   boxShadow: '0 1px 2px rgba(20,30,18,0.04)',
 };
 
-// Floating tab bar — 5 tabs (중보기도 + 삶공부는 '신앙' 탭으로 묶임)
+// Floating tab bar — 5 primary tabs
 const TABS = [
-  { key: 'home',   label: '홈',     icon: Icon.home,   iconOn: Icon.homeOn },
-  { key: 'market', label: '나눔',   icon: Icon.bag,    iconOn: Icon.bagOn  },
-  { key: 'group',  label: '소모임', icon: Icon.people, iconOn: Icon.peopleOn },
-  { key: 'faith',  label: '동행',   icon: Icon.hands,  iconOn: Icon.handsOn },
-  { key: 'me',     label: 'MY',     icon: Icon.user,   iconOn: Icon.userOn },
+  { key: 'home',      label: '홈',     icon: Icon.home,   iconOn: Icon.homeOn },
+  { key: 'market',    label: '나눔',   icon: Icon.bag,    iconOn: Icon.bagOn  },
+  { key: 'companion', label: '동행',   icon: Icon.people, iconOn: Icon.peopleOn },
+  { key: 'prayer',    label: '기도',   icon: Icon.pray,   iconOn: Icon.prayOn },
+  { key: 'study',     label: '삶공부', icon: Icon.book,   iconOn: Icon.bookOn },
 ];
 function TabBar({ active = 'home' }) {
   return (

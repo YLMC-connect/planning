@@ -38,7 +38,23 @@ function ScreenHome() {
           <div style={{ fontSize:'calc(16px * var(--app-fs-scale))', fontWeight: 800, letterSpacing:'-0.01em' }}>열린문 커넥트</div>
         </div>
         <div style={{ display:'flex', gap: 6 }}>
-          <div style={{ width: 36, height: 36, display:'grid', placeItems:'center', color:'var(--app-ink-soft)' }}>{Icon.search()}</div>
+          <button style={{
+            height: 36,
+            padding: '0 11px',
+            borderRadius: 'var(--app-r-pill)',
+            border: '1px solid var(--app-line)',
+            background: 'var(--app-surface)',
+            color: 'var(--app-ink-soft)',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 5,
+            fontFamily: 'inherit',
+            fontSize: 'calc(12px * var(--app-fs-scale))',
+            fontWeight: 800,
+          }}>
+            {Icon.user(16)}
+            MY
+          </button>
           <div style={{ width: 36, height: 36, display:'grid', placeItems:'center', color:'var(--app-ink-soft)', position:'relative' }}>
             {Icon.bell()}
             <div style={{ position:'absolute', top: 7, right: 9, width: 7, height: 7, borderRadius: '50%', background: 'var(--app-danger)', border: '1.5px solid var(--app-bg)' }}/>

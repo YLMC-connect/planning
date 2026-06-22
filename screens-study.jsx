@@ -16,16 +16,12 @@ function ScreenStudyList() {
     <Phone>
       <div className="phone-topbar">
         <div style={{ flex: 1 }}>
-          <div className="title">동행</div>
-          <div className="t-sm" style={{ marginTop: 2 }}>기도로 동행하고, 말씀으로 자라가요</div>
+          <div className="title">삶공부</div>
+          <div className="t-sm" style={{ marginTop: 2 }}>말씀으로 배우고 삶으로 자라가요</div>
         </div>
         <div className="actions">
           <div style={{ width: 36, height: 36, display:'grid', placeItems:'center', color:'var(--app-ink-soft)' }}>{Icon.search()}</div>
         </div>
-      </div>
-
-      <div style={{ padding: '0 18px 12px' }}>
-        <SegTabs items={[{key:'pray',label:'중보기도'},{key:'study',label:'삶공부'}]} active="study" />
       </div>
 
       <div className="phone-body">
@@ -84,7 +80,7 @@ function ScreenStudyList() {
         <div style={{ height: 12 }}/>
       </div>
 
-      <TabBar active="faith" />
+      <TabBar active="study" />
     </Phone>
   );
 }

@@ -174,13 +174,9 @@ function ScreenPrayerList({ variant = 'general' }) {
     <Phone>
       <div className="phone-topbar">
         <div style={{ flex: 1 }}>
-          <div className="title">동행</div>
-          <div className="t-sm" style={{ marginTop: 2 }}>함께 기도하고 말씀으로 자라가요</div>
+          <div className="title">기도</div>
+          <div className="t-sm" style={{ marginTop: 2 }}>함께 기도하고 응답을 나눠요</div>
         </div>
-      </div>
-
-      <div style={{ padding: '0 18px 12px' }}>
-        <SegTabs items={[{ key: 'pray', label: '중보기도' }, { key: 'study', label: '삶공부' }]} active="pray" />
       </div>
 
       <div className="phone-body" style={{ paddingBottom: 168 }}>
@@ -300,7 +296,7 @@ function ScreenPrayerList({ variant = 'general' }) {
       }}>
         {Icon.plus(20)} 기도제목 등록
       </button>
-      <TabBar active="faith" />
+      <TabBar active="prayer" />
     </Phone>
   );
 }

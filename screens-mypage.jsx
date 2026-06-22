@@ -35,11 +35,7 @@ function ScreenMyPage({ variant = 'default' }) {
 
   return (
     <Phone>
-      <div className="phone-topbar">
-        <div style={{ flex: 1 }}>
-          <div className="title">마이페이지</div>
-        </div>
-      </div>
+      <TopBar title="마이페이지" backLabel="홈" />
 
       <div className="phone-body">
         {/* 프로필 카드 */}
@@ -167,8 +163,6 @@ function ScreenMyPage({ variant = 'default' }) {
 
         <div style={{ textAlign: 'center', padding: '24px 0 8px', color: 'var(--app-ink-hint)', fontSize: 'calc(11px * var(--app-fs-scale))' }}>v 1.0.2 · 열린문 커넥트</div>
       </div>
-
-      <TabBar active="me"/>
 
       {showLogout && (
         <AlertDialog

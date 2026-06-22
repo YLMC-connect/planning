@@ -99,14 +99,14 @@ const APP_SECTIONS = [
     ],
   },
   {
-    id: 'group',
-    title: '소모임',
-    subtitle: '목록 · 상세(권한별) · 개설 · 공지 · 멤버',
+    id: 'companion',
+    title: '동행',
+    subtitle: '소모임 · 봉사',
     boards: [
-      b('group-list', '20 · 목록 (FUNC-021)', ScreenGroupList, { variant: 'all' }),
-      b('group-list-mine', '20-1 · 목록 — 내 소모임', ScreenGroupList, { variant: 'mine' }),
-      b('group-list-mine-em', '20-2 · 목록 — 내 소모임 빈 상태', ScreenGroupList, { variant: 'mine-empty' }),
-      b('group-list-err', '20-3 · 목록 — 네트워크 오류', ScreenGroupList, { variant: 'network-error' }),
+      b('group-list', '20 · 동행 > 소모임 목록 (FUNC-021)', ScreenGroupList, { variant: 'all' }),
+      b('group-list-my-full', '20-1 · 동행 > 내 소모임 전체보기 (FUNC-021)', ScreenGroupList, { variant: 'my-full' }),
+      b('service-list', '20-S · 동행 > 봉사 목록', ScreenServiceList),
+      b('group-list-err', '20-2 · 동행 > 소모임 — 네트워크 오류', ScreenGroupList, { variant: 'network-error' }),
       b('group-detail-leader', '21 · 상세 — 소모임장 (FUNC-022)', ScreenGroupDetail, { variant: 'leader' }),
       b('group-detail-closed', '21-1 · 상세 — 소모임장 + 모집완료', ScreenGroupDetail, { variant: 'leader-closed' }),
       b('group-detail-del', '21-2 · 삭제 확인 (FUNC-026)', ScreenGroupDetail, { variant: 'delete-confirm' }),
@@ -136,7 +136,7 @@ const APP_SECTIONS = [
   },
   {
     id: 'pray',
-    title: '중보기도',
+    title: '기도',
     subtitle: '고정 12개 방 · 승인 후 입장 · 공통 기도제목 · 완료/응답',
     boards: [
       b('pray-list', '25 · 중보기도 메인 — 일반 성도 (FUNC-040)', ScreenPrayerList, { variant: 'general' }),
@@ -178,8 +178,8 @@ const APP_SECTIONS = [
   },
   {
     id: 'me',
-    title: '마이페이지',
-    subtitle: '프로필 · 활동 · 차단 · 고객센터 · 약관 · 계정 · 타 성도 프로필',
+    title: 'MY',
+    subtitle: '홈 상단 진입 · 프로필 · 활동 · 차단 · 고객센터 · 약관 · 계정',
     boards: [
       b('me', '5 · 마이페이지 (FUNC-005)', ScreenMyPage, { variant: 'default' }),
       b('me-logout', '5-1 · 로그아웃 팝업 (FUNC-008)', ScreenLogoutConfirm),
