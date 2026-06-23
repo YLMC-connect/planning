@@ -11,8 +11,8 @@ const Icon = {
   bagOn:   (s = 22) => <svg width={s} height={s} viewBox="0 0 24 24" fill="currentColor"><path d="M9 6a3 3 0 116 0v2h3.4l-1.2 13H6.8L5.6 8H9V6zm2 2h2V6a1 1 0 10-2 0v2z"/></svg>,
   people:  (s = 22) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="9" cy="9" r="3.2"/><circle cx="17" cy="10" r="2.4"/><path d="M3.5 19c.5-3 3-4.5 5.5-4.5s5 1.5 5.5 4.5"/><path d="M15 19c.4-2.2 2-3.4 4-3.4s2.7.8 3 2"/></svg>,
   peopleOn:(s = 22) => <svg width={s} height={s} viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="8.5" r="3.4"/><circle cx="17" cy="9.5" r="2.6"/><path d="M3 19.5c.6-3.4 3.2-5.2 6-5.2s5.4 1.8 6 5.2H3z"/><path d="M16 14.5c1 2 1.5 3.5 1.7 5h4.3c-.2-2.6-1.7-4.5-4-4.5-.7 0-1.4.2-2 .5z"/></svg>,
-  pray:    (s = 22) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 3v8M10 11l-3 4v3h10v-3l-3-4M14 3v8"/><path d="M7 18h10"/></svg>,
-  prayOn:  (s = 22) => <svg width={s} height={s} viewBox="0 0 24 24" fill="currentColor"><path d="M9 3a1 1 0 012 0v7.2L8 14H6l3-3.5V3zm6 0a1 1 0 00-2 0v7.2L16 14h2l-3-3.5V3zM6 15h12v4H6z"/></svg>,
+  pray:    (s = 22) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3v18"/><path d="M7 8h10"/><path d="M6 21h12"/></svg>,
+  prayOn:  (s = 22) => <svg width={s} height={s} viewBox="0 0 24 24" fill="currentColor"><path d="M10.5 3h3v5H18v3h-4.5v10h-3V11H6V8h4.5V3z"/><path d="M6 21h12v-2H6v2z"/></svg>,
   book:    (s = 22) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 4h10a3 3 0 013 3v13H8a3 3 0 01-3-3V4z"/><path d="M5 17a3 3 0 013-3h10"/></svg>,
   bookOn:  (s = 22) => <svg width={s} height={s} viewBox="0 0 24 24" fill="currentColor"><path d="M5 4h10a3 3 0 013 3v13H8a3 3 0 01-3-3V4zm3 12h9V7a1 1 0 00-1-1H7v10z"/></svg>,
   user:    (s = 22) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="9" r="3.6"/><path d="M5 20c1-3.6 3.8-5 7-5s6 1.4 7 5"/></svg>,
@@ -482,6 +482,35 @@ function FormField({ label, hint, children, required, style }) {
   );
 }
 
+function AppFab({ children, icon, style }) {
+  return (
+    <button style={{
+      position: 'absolute',
+      right: 16,
+      bottom: 90,
+      zIndex: 20,
+      height: 52,
+      padding: '0 18px 0 16px',
+      borderRadius: 'var(--app-r-pill)',
+      background: 'var(--app-primary)',
+      color: '#fff',
+      display: 'flex',
+      alignItems: 'center',
+      gap: 8,
+      border: 0,
+      cursor: 'pointer',
+      fontFamily: 'inherit',
+      fontSize: 'calc(14px * var(--app-fs-scale))',
+      fontWeight: 700,
+      boxShadow: '0 10px 24px -8px rgba(91,122,176,0.5), 0 4px 8px -2px rgba(20,30,18,0.14)',
+      ...style,
+    }}>
+      {icon}
+      {children}
+    </button>
+  );
+}
+
 function BlockIcon({ size = 18 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -497,6 +526,6 @@ function won(n) { return n === 0 ? '나눔' : Number(n).toLocaleString('ko-KR') 
 Object.assign(window, {
   Icon, StatusBar, Phone, TopBar, TabBar, TABS,
   Avatar, Thumb, Cover, Section, ChipRow, SegTabs, UnderlineTabs,
-  AlertDialog, CheckToast, BottomSheet, RadioSheet, FormField, BlockIcon,
+  AlertDialog, CheckToast, BottomSheet, RadioSheet, FormField, AppFab, BlockIcon,
   won, gradFor, BACK_PILL_STYLE,
 });

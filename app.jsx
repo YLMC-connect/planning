@@ -3,7 +3,8 @@ const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
   "primary": "#5B7AB0",
   "fontScale": 1,
   "radiusScale": 1,
-  "buttonState": "auto"
+  "buttonState": "auto",
+  "mobilePreview": true
 }/*EDITMODE-END*/;
 
 // Shared context so any screen can override button enabled/disabled state from Tweaks
@@ -173,8 +174,10 @@ const APP_SECTIONS = [
       b('study-list', '31 · 삶공부 전체 과정 목록 (FUNC-060,062)', ScreenStudyList),
       b('study-detail', '32 · 삶공부 과정 상세 (FUNC-061,064~067)', ScreenStudyDetail),
       b('study-apply', '33 · 삶공부 수강 신청 (FUNC-063)', ScreenStudyApply),
+      b('study-apply-complete', '33-1 · 수강 신청 완료 (FUNC-063)', ScreenStudyApply, { variant: 'complete' }),
       b('study-history', '34 · 삶공부 수강 상태 조회 (FUNC-064)', ScreenStudyHistory),
       b('study-admin', '35 · 삶공부 과정 운영 관리 (FUNC-059)', ScreenStudyAdminCourses),
+      b('study-admin-sessions', '36 · 삶공부 수업 관리 (FUNC-065,067)', ScreenStudyAdminSessions),
     ],
   },
   {
@@ -194,6 +197,7 @@ const APP_SECTIONS = [
       b('me-activity-em', '7-3 · 활동 내역 — 빈 상태', ScreenActivity, { variant: 'empty' }),
       b('me-prayer-history', '7-4 · 중보기도 활동 이력', ScreenPrayerVolunteerHistory),
       b('me-prayer-history-empty', '7-5 · 중보기도 활동 이력 — 빈 상태', ScreenPrayerVolunteerHistory, { variant: 'empty' }),
+      b('me-study-completion', '7-6 · 삶공부 수료', ScreenStudyCompletionHistory),
       b('me-blocked', '8 · 차단 사용자 (FUNC-035)', ScreenBlocked, { variant: 'default' }),
       b('me-blocked-cf', '8-1 · 차단 해제 — 확인 (FUNC-036)', ScreenBlocked, { variant: 'confirm' }),
       b('me-blocked-ts', '8-2 · 차단 해제 — Toast', ScreenBlocked, { variant: 'toast' }),
@@ -222,6 +226,357 @@ function renderArtboard(board) {
   );
 }
 
+const PREVIEW_TAB_ROUTES = {
+  '홈': 'home',
+  '나눔': 'market-list',
+  '동행': 'group-list',
+  '기도': 'pray-list',
+  '삶공부': 'study-list',
+};
+
+const PREVIEW_TEXT_ROUTES = [
+  ['login', '로그인', 'home'],
+  ['login', '회원가입', 'terms'],
+  ['terms', '전문 보기', 'terms-sheet'],
+  ['terms', '다음', 'signup'],
+  ['signup', '중복 확인', 'signup-id-dup'],
+  ['signup', '가입 완료', 'signup-complete'],
+  ['signup-complete', '홈으로 이동', 'home'],
+  ['signup-pending', '로그인으로 돌아가기', 'login'],
+  ['home', '내 정보 보기', 'me'],
+  ['home', '내 소모임', 'group-list-my-full'],
+  ['home', '내 기도', 'pray-detail'],
+  ['home', '삶공부 진행', 'study-detail'],
+  ['market-list', '글쓰기', 'market-create'],
+  ['market-list', '예약중', 'market-list-reserved'],
+  ['market-list', '나눔완료', 'market-list-done'],
+  ['market-list', '전체', 'market-list-all'],
+  ['market-list', '아이 장난감', 'market-detail-other'],
+  ['market-list', '토스터기', 'market-detail-other'],
+  ['market-list', '유아용 카시트', 'market-detail-other'],
+  ['market-list', '어린이 동화책', 'market-detail-other'],
+  ['market-list', '도자기 다세트', 'market-detail-other'],
+  ['market-list', '아기 가을 옷', 'market-detail-other'],
+  ['market-list-all', '나눔중', 'market-list'],
+  ['market-list-all', '예약중', 'market-list-reserved'],
+  ['market-list-all', '나눔완료', 'market-list-done'],
+  ['market-list-all', '아이 장난감', 'market-detail-other'],
+  ['market-list-reserved', '전체', 'market-list-all'],
+  ['market-list-reserved', '나눔중', 'market-list'],
+  ['market-list-reserved', '나눔완료', 'market-list-done'],
+  ['market-list-reserved', '토스터기', 'market-detail-other'],
+  ['market-list-done', '전체', 'market-list-all'],
+  ['market-list-done', '나눔중', 'market-list'],
+  ['market-list-done', '예약중', 'market-list-reserved'],
+  ['market-list-done', '도자기 다세트', 'market-detail-other'],
+  ['market-detail-own', '상태 변경', 'market-detail-status'],
+  ['market-detail-own', '수정', 'market-edit'],
+  ['market-detail-own', '삭제', 'market-detail-del'],
+  ['market-detail-resv', '상태 변경', 'market-detail-status'],
+  ['market-detail-resv', '수정', 'market-edit'],
+  ['market-detail-resv', '삭제', 'market-detail-del'],
+  ['market-detail-done', '삭제', 'market-detail-del'],
+  ['market-detail-other', '신고', 'market-detail-rep'],
+  ['market-detail-other', '차단', 'user-cf'],
+  ['market-detail-rep', '기타', 'market-detail-rep2'],
+  ['market-create', '등록', 'market-detail-own'],
+  ['market-create-fill', '등록', 'market-detail-own'],
+  ['market-edit', '저장', 'market-detail-own'],
+  ['group-list', '전체보기', 'group-list-my-full'],
+  ['group-list', '봉사', 'service-list'],
+  ['group-list', '개설', 'group-create'],
+  ['group-list', '토요 산악회', 'group-detail-leader'],
+  ['group-list', '독서 나눔', 'group-detail-member'],
+  ['group-list', '엄마들의 수다방', 'group-detail-member'],
+  ['group-list', '화요 새벽기도회', 'group-detail-non'],
+  ['group-list', '어르신 돌봄 봉사', 'group-detail-non'],
+  ['group-list', '찬양 동아리', 'group-detail-closed'],
+  ['group-list-my-full', '토요 산악회', 'group-detail-leader'],
+  ['group-list-my-full', '독서 나눔', 'group-detail-member'],
+  ['service-list', '소모임', 'group-list'],
+  ['group-detail-leader', '수정', 'group-edit'],
+  ['group-detail-leader', '공지', 'group-notice'],
+  ['group-detail-leader', '멤버', 'group-members'],
+  ['group-detail-leader', '삭제', 'group-detail-del'],
+  ['group-detail-member', '탈퇴하기', 'group-detail-leave'],
+  ['group-detail-non', '참여 신청하기', 'group-detail-apply'],
+  ['group-create', '개설', 'group-detail-leader'],
+  ['group-create-fill', '개설', 'group-detail-leader'],
+  ['group-edit', '저장', 'group-detail-leader'],
+  ['group-notice', '등록', 'group-detail-leader'],
+  ['group-notice-fill', '등록', 'group-detail-leader'],
+  ['group-notice-edit', '저장', 'group-detail-leader'],
+  ['group-notice-edit', '삭제', 'group-notice-del'],
+  ['group-members', '강퇴', 'group-members-kick'],
+  ['group-members', '이관', 'group-members-tr'],
+  ['me', '프로필 수정', 'me-edit'],
+  ['me', '내 활동', 'me-activity'],
+  ['me', '중보기도 활동 이력', 'me-prayer-history'],
+  ['me', '삶공부 수료', 'me-study-completion'],
+  ['me', '차단 관리', 'me-blocked'],
+  ['me', 'FAQ', 'me-faq'],
+  ['me', '약관', 'me-terms'],
+  ['me', '개인정보 처리방침', 'me-privacy'],
+  ['me', '로그아웃', 'me-logout'],
+  ['me', '회원탈퇴', 'me-withdraw'],
+  ['me-edit', '저장', 'me'],
+  ['me-blocked', '차단 해제', 'me-blocked-cf'],
+  ['me-withdraw', '탈퇴하기', 'me-withdraw-cf'],
+  ['user', '차단', 'user-cf'],
+  ['pray-list', '기도제목 등록', 'pray-write'],
+  ['pray-list', '기도제목 등록하기', 'pray-write'],
+  ['pray-list', '내 기도제목 전체보기', 'pray-request'],
+  ['pray-list', '내 기도제목', 'pray-request'],
+  ['pray-list', '중보기도 신청', 'pray-apply'],
+  ['pray-list', '신청하기', 'pray-apply'],
+  ['pray-list', '월요일 오전 기도방', 'pray-detail'],
+  ['pray-list', '내 기도방', 'pray-detail'],
+  ['pray-list-admin', '참가 신청', 'pray-approval'],
+  ['pray-list-admin', '기도제목 검토', 'pray-moderation'],
+  ['pray-list-admin', '기도방 멤버', 'pray-members'],
+  ['pray-list-admin', '긴급 기도제목', 'pray-urgent-admin'],
+  ['pray-list-admin', '오프라인 요청 매칭', 'pray-offline-match'],
+  ['pray-list-admin', '기도제목 통합관리', 'pray-topic-admin'],
+  ['pray-detail', '응답', 'pray-answer'],
+  ['pray-detail', '현황', 'pray-status'],
+  ['pray-answer', '기도', 'pray-detail'],
+  ['pray-answer', '현황', 'pray-status'],
+  ['pray-status', '기도', 'pray-detail'],
+  ['pray-status', '응답', 'pray-answer'],
+  ['pray-apply', '신청하기', 'pray-list'],
+  ['pray-members', '변경', 'pray-members-room-select'],
+  ['pray-members', '제외', 'pray-members-exclude'],
+  ['pray-members-room-select', '선택한 기도방 보기', 'pray-members'],
+  ['pray-topic-admin', '수술 후 회복', 'pray-answer-approval'],
+  ['pray-topic-admin', '아버지의 마음', 'pray-moderation'],
+  ['pray-request', '응답완료 요청하기', 'pray-answer-request'],
+  ['pray-write', '기도제목 등록하기', 'pray-request'],
+  ['pray-answer-request', '응답완료 요청하기', 'pray-request'],
+  ['study-list', '생명의 삶', 'study-detail'],
+  ['study-list', '새로운 삶', 'study-detail'],
+  ['study-list', '경건의 삶', 'study-detail'],
+  ['study-list', '확신의 삶', 'study-detail'],
+  ['study-list', '하나님을 경험하는 삶', 'study-detail'],
+  ['study-list', '생명언어의 삶', 'study-detail'],
+  ['study-list', '부부의 삶', 'study-detail'],
+  ['study-list', '말씀의 삶', 'study-detail'],
+  ['study-list', '기도의 삶', 'study-detail'],
+  ['study-list', '수강 현황', 'study-history'],
+  ['study-detail', '수강 신청', 'study-apply'],
+  ['study-detail', '수강 상태 보기', 'study-history'],
+  ['study-detail', '수강 현황', 'study-history'],
+  ['study-apply', '수강 신청하기', 'study-apply-complete'],
+  ['study-apply-complete', '과정 목록', 'study-list'],
+  ['study-apply-complete', '수강 상태 보기', 'study-history'],
+  ['study-history', '생명의 삶', 'study-detail'],
+  ['study-history', '수료 뱃지 보기', 'me-study-completion'],
+  ['study-admin', '출결 입력', 'study-admin-sessions'],
+  ['study-admin', '보강 일정', 'study-admin-sessions'],
+  ['study-admin', '공지 읽음', 'study-admin-sessions'],
+];
+
+function MobilePreview({ sections }) {
+  const boards = React.useMemo(
+    () => sections.flatMap(section => section.boards.map(board => ({ ...board, section }))),
+    [sections]
+  );
+  const byId = React.useMemo(() => Object.fromEntries(boards.map(board => [board.id, board])), [boards]);
+  const [currentId, setCurrentId] = React.useState('home');
+  const [history, setHistory] = React.useState([]);
+  const [pickerOpen, setPickerOpen] = React.useState(false);
+  const [viewport, setViewport] = React.useState({ w: window.innerWidth, h: window.innerHeight });
+  const current = byId[currentId] || byId.home || boards[0];
+  const Screen = current.screen;
+  const previewScale = Math.min(
+    1,
+    Math.max(0.72, Math.min((viewport.w - 48) / ARTBOARD_WIDTH, (viewport.h - 140) / ARTBOARD_HEIGHT))
+  );
+
+  React.useEffect(() => {
+    const onResize = () => setViewport({ w: window.innerWidth, h: window.innerHeight });
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
+
+  const go = React.useCallback((nextId) => {
+    if (!byId[nextId] || nextId === currentId) return;
+    setHistory(prev => [...prev, currentId]);
+    setCurrentId(nextId);
+    setPickerOpen(false);
+  }, [byId, currentId]);
+
+  const back = React.useCallback(() => {
+    setHistory(prev => {
+      if (!prev.length) {
+        setCurrentId('home');
+        return prev;
+      }
+      const next = prev.slice(0, -1);
+      setCurrentId(prev[prev.length - 1]);
+      return next;
+    });
+  }, []);
+
+  const routeFromText = React.useCallback((text) => {
+    const matches = PREVIEW_TEXT_ROUTES
+      .filter(([from, needle]) => from === currentId && text.includes(needle))
+      .sort((a, b) => b[1].length - a[1].length);
+    return matches[0]?.[2];
+  }, [currentId]);
+
+  const onPreviewClick = (e) => {
+    if (e.target.closest('[data-preview-ui]')) return;
+
+    if (e.target.closest('.back')) {
+      e.preventDefault();
+      e.stopPropagation();
+      back();
+      return;
+    }
+
+    const tab = e.target.closest('.tabbar button');
+    if (tab) {
+      const next = PREVIEW_TAB_ROUTES[tab.textContent.trim()];
+      if (next) {
+        e.preventDefault();
+        e.stopPropagation();
+        go(next);
+      }
+      return;
+    }
+
+    let el = e.target;
+    while (el && !el.classList?.contains('phone')) {
+      const text = (el.textContent || '').replace(/\s+/g, ' ').trim();
+      if (text && text.length <= 90) {
+        const next = routeFromText(text);
+        if (next) {
+          e.preventDefault();
+          e.stopPropagation();
+          go(next);
+          return;
+        }
+      }
+      el = el.parentElement;
+    }
+  };
+
+  return (
+    <div style={{
+      minHeight: '100vh',
+      background: '#f0eee9',
+      display: 'grid',
+      placeItems: 'center',
+      padding: '72px 24px 32px',
+      fontFamily: DC.font,
+      position: 'relative',
+      boxSizing: 'border-box',
+    }}>
+      <div data-preview-ui style={{
+        position: 'fixed',
+        top: 16,
+        left: '50%',
+        transform: 'translateX(-50%)',
+        zIndex: 90,
+        display: 'flex',
+        alignItems: 'center',
+        gap: 10,
+        padding: '8px 10px',
+        borderRadius: 999,
+        background: 'rgba(255,255,255,0.92)',
+        boxShadow: '0 10px 30px rgba(0,0,0,.16)',
+      }}>
+        <button onClick={() => setPickerOpen(true)} style={{
+          height: 32,
+          padding: '0 14px',
+          border: 0,
+          borderRadius: 999,
+          background: '#1E2920',
+          color: '#fff',
+          font: 'inherit',
+          fontSize: 13,
+          fontWeight: 800,
+        }}>화면 선택</button>
+        <div style={{ maxWidth: 280, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontSize: 13, fontWeight: 700, color: '#3d3830' }}>
+          {current.label}
+        </div>
+      </div>
+
+      <div style={{ width: ARTBOARD_WIDTH * previewScale, height: ARTBOARD_HEIGHT * previewScale }}>
+        <div onClickCapture={onPreviewClick} style={{
+          width: ARTBOARD_WIDTH,
+          height: ARTBOARD_HEIGHT,
+          transform: `scale(${previewScale})`,
+          transformOrigin: 'top left',
+          boxShadow: '0 24px 70px rgba(0,0,0,.28)',
+          overflow: 'hidden',
+          background: '#fff',
+        }}>
+          <Screen key={current.id} {...(current.props || {})} />
+        </div>
+      </div>
+
+      {pickerOpen && (
+        <div data-preview-ui style={{
+          position: 'fixed',
+          inset: 0,
+          zIndex: 100,
+          background: 'rgba(30,35,28,.42)',
+          display: 'grid',
+          placeItems: 'center',
+          padding: 24,
+        }} onClick={() => setPickerOpen(false)}>
+          <div style={{
+            width: 'min(760px, 92vw)',
+            maxHeight: '78vh',
+            overflow: 'auto',
+            borderRadius: 18,
+            background: '#fff',
+            boxShadow: '0 24px 80px rgba(0,0,0,.28)',
+            padding: 18,
+          }} onClick={(e) => e.stopPropagation()}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, marginBottom: 14 }}>
+              <div style={{ fontSize: 18, fontWeight: 900 }}>화면 선택</div>
+              <button onClick={() => setPickerOpen(false)} style={{
+                width: 34,
+                height: 34,
+                border: 0,
+                borderRadius: 999,
+                background: 'rgba(0,0,0,.06)',
+                font: 'inherit',
+                fontWeight: 900,
+              }}>×</button>
+            </div>
+            <div style={{ display: 'grid', gap: 16 }}>
+              {sections.map(section => (
+                <div key={section.id}>
+                  <div style={{ marginBottom: 8, fontSize: 13, fontWeight: 900, color: '#6a6258' }}>{section.title}</div>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(210px, 1fr))', gap: 8 }}>
+                    {section.boards.map(board => (
+                      <button key={board.id} onClick={() => go(board.id)} style={{
+                        minHeight: 42,
+                        padding: '9px 11px',
+                        borderRadius: 10,
+                        border: board.id === current.id ? '1.5px solid var(--app-primary)' : '1px solid rgba(30,41,32,.12)',
+                        background: board.id === current.id ? 'var(--app-primary-soft)' : '#fff',
+                        color: '#1E2920',
+                        textAlign: 'left',
+                        font: 'inherit',
+                        fontSize: 12,
+                        fontWeight: board.id === current.id ? 850 : 650,
+                      }}>{board.label}</button>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function App() {
   const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
 
@@ -234,14 +589,38 @@ function App() {
   return (
     <>
       <window.ButtonStateContext.Provider value={t.buttonState}>
-      <DesignCanvas>
-        {APP_SECTIONS.map(section => (
-          <DCSection key={section.id} id={section.id} title={section.title} subtitle={section.subtitle}>
-            {section.boards.map(renderArtboard)}
-          </DCSection>
-        ))}
-      </DesignCanvas>
+      {t.mobilePreview ? (
+        <MobilePreview sections={APP_SECTIONS} />
+      ) : (
+        <DesignCanvas>
+          {APP_SECTIONS.map(section => (
+            <DCSection key={section.id} id={section.id} title={section.title} subtitle={section.subtitle}>
+              {section.boards.map(renderArtboard)}
+            </DCSection>
+          ))}
+        </DesignCanvas>
+      )}
       </window.ButtonStateContext.Provider>
+
+      <button data-preview-ui onClick={() => setTweak('mobilePreview', !t.mobilePreview)} style={{
+        position: 'fixed',
+        top: 16,
+        right: 16,
+        zIndex: 120,
+        height: 36,
+        padding: '0 14px',
+        border: 0,
+        borderRadius: 999,
+        background: t.mobilePreview ? '#1E2920' : '#fff',
+        color: t.mobilePreview ? '#fff' : '#1E2920',
+        font: 'inherit',
+        fontSize: 13,
+        fontWeight: 850,
+        boxShadow: '0 10px 28px rgba(0,0,0,.16)',
+        cursor: 'pointer',
+      }}>
+        {t.mobilePreview ? '캔버스 보기' : '모바일 프리뷰'}
+      </button>
 
       <TweaksPanel title="Tweaks">
         <TweakSection label="컬러" />
@@ -257,6 +636,8 @@ function App() {
                     options={['0.7', '1', '1.2']}
                     onChange={(v) => setTweak('radiusScale', Number(v))} />
         <TweakSection label="상태" />
+        <TweakToggle label="모바일 프리뷰" value={t.mobilePreview}
+                     onChange={(v) => setTweak('mobilePreview', v)} />
         <TweakRadio label="버튼 상태" value={t.buttonState}
                     options={['auto', 'enabled', 'disabled']}
                     onChange={(v) => setTweak('buttonState', v)} />

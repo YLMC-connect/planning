@@ -5,7 +5,6 @@
 // ─────────────────────────────────────────────────────────────
 function ScreenMyPage({ variant = 'default' }) {
   const showLogout = variant === 'logout-confirm';
-  const studyBadges = ['생명의 삶', '기도의 삶', '말씀통독의 삶'];
 
   const MenuRow = ({ icon, label, last, danger }) => (
     <div style={{
@@ -68,17 +67,6 @@ function ScreenMyPage({ variant = 'default' }) {
           }}>프로필 수정</button>
         </div>
 
-        {/* 삶공부 수료 뱃지 */}
-        <SectionLabel>삶공부 수료 뱃지</SectionLabel>
-        <div className="card" style={{ margin: '0 18px', padding: 15, boxShadow: '0 1px 3px rgba(20,30,18,0.05)' }}>
-          <div style={{ display:'flex', gap: 8, flexWrap:'wrap' }}>
-            {studyBadges.map((badge, i) => (
-              <span key={i} className="badge badge-primary" style={{ padding:'6px 10px' }}>{badge} 수료</span>
-            ))}
-          </div>
-          <div className="t-xs" style={{ marginTop: 10 }}>본인에게만 보이는 삶공부 수료 과목입니다.</div>
-        </div>
-
         {/* 활동 관리 */}
         <SectionLabel>활동 관리</SectionLabel>
         <div className="card" style={{ margin: '0 18px', overflow: 'hidden' }}>
@@ -100,6 +88,10 @@ function ScreenMyPage({ variant = 'default' }) {
               </svg>
             }
             label="중보기도 활동 이력"
+          />
+          <MenuRow
+            icon={Icon.book(20)}
+            label="삶공부 수료"
           />
           <MenuRow
             icon={<BlockIcon size={20}/>}

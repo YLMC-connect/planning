@@ -2,12 +2,6 @@
 
 function ScreenHome() {
   // Mock data
-  const quickLinks = [
-    { label:'동행', desc:'소모임·봉사', icon: Icon.people, color:'var(--app-primary-deep)', bg:'#EEF4EA', border:'rgba(107,130,96,0.18)' },
-    { label:'기도', desc:'중보기도', icon: Icon.pray, color:'#8A5D34', bg:'#F7EFE4', border:'rgba(138,93,52,0.18)' },
-    { label:'삶공부', desc:'수강 현황', icon: Icon.book, color:'#5F6FA6', bg:'#EEF1FA', border:'rgba(95,111,166,0.18)' },
-    { label:'나눔', desc:'물품 나눔', icon: Icon.bag, color:'#7B6D48', bg:'#F4F0E6', border:'rgba(123,109,72,0.18)' },
-  ];
   const activityItems = [
     { title:'내 소모임', value:'청년 1부 큐티모임 외 2개', desc:'최근 글: 마가복음 8장 함께 묵상해요', color:'var(--app-primary)' },
     { title:'내 기도', value:'월요일 오전 기도방', desc:'오늘 기도 완료 전', color:'#8A5D34' },
@@ -85,41 +79,6 @@ function ScreenHome() {
             </div>
           </div>
         </div>
-
-        <Section title="바로가기">
-          <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap: 12, padding:'0 18px' }}>
-            {quickLinks.map(item => (
-              <button key={item.label} className="card" style={{
-                minHeight: 96,
-                padding: 15,
-                display:'flex',
-                flexDirection:'column',
-                alignItems:'flex-start',
-                justifyContent:'space-between',
-                textAlign:'left',
-                border:`1px solid ${item.border}`,
-                background:item.bg,
-                boxShadow:'0 1px 3px rgba(20,30,18,0.05)',
-              }}>
-                <div style={{
-                  width: 38,
-                  height: 38,
-                  borderRadius: 13,
-                  background:'rgba(255,255,255,0.72)',
-                  color: item.color,
-                  display:'grid',
-                  placeItems:'center',
-                }}>
-                  {item.icon(21)}
-                </div>
-                <div>
-                  <div style={{ fontWeight: 900, fontSize:'calc(16px * var(--app-fs-scale))', lineHeight: 1.2 }}>{item.label}</div>
-                  <div className="t-xs" style={{ marginTop: 4 }}>{item.desc}</div>
-                </div>
-              </button>
-            ))}
-          </div>
-        </Section>
 
         <Section title="내 활동 요약" style={{ marginBottom: 12 }}>
           <div style={{ display:'grid', gap: 10, padding:'0 18px' }}>

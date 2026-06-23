@@ -250,6 +250,52 @@ function ScreenPrayerVolunteerHistory({ variant = 'default' }) {
   );
 }
 
+function ScreenStudyCompletionHistory() {
+  const completions = [
+    { name: '생명의 삶', year: '2026년', term: '12기', status: '수료' },
+    { name: '기도의 삶', year: '2025년', term: '8기', status: '수료' },
+    { name: '말씀통독의 삶', year: '2025년', term: '3기', status: '수료' },
+  ];
+
+  return (
+    <Phone>
+      <TopBar title="삶공부 수료"/>
+      <div className="phone-body" style={{ padding: '4px 18px 24px' }}>
+        <div style={{
+          padding: 14,
+          borderRadius: 'var(--app-r-m)',
+          background: 'var(--app-primary-soft)',
+          color: 'var(--app-primary-deep)',
+          fontSize: 'calc(13px * var(--app-fs-scale))',
+          lineHeight: 1.55,
+          marginBottom: 14,
+        }}>
+          내가 수료한 삶공부 과정과 기수를 확인합니다.
+        </div>
+
+        <div className="card" style={{ overflow: 'hidden', boxShadow: '0 1px 3px rgba(20,30,18,0.05)' }}>
+          {completions.map((item, i) => (
+            <div key={i} style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              gap: 12,
+              padding: '16px',
+              borderBottom: i < completions.length - 1 ? '1px solid var(--app-line)' : 'none',
+            }}>
+              <div style={{ minWidth: 0 }}>
+                <div style={{ fontWeight: 850, fontSize: 'calc(15px * var(--app-fs-scale))' }}>{item.name}</div>
+                <div className="t-sm" style={{ marginTop: 5 }}>{item.year} · {item.term}</div>
+              </div>
+              <span className="badge badge-primary">{item.status}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </Phone>
+  );
+}
+
 // ─── 관심목록 (마이페이지 — 거래/소모임/기도방 통합) ───
 function ScreenMyWishlist() {
   const tabs = [
@@ -710,7 +756,7 @@ function ScreenAccount() {
 }
 
 Object.assign(window, {
-  ScreenActivity, ScreenPrayerVolunteerHistory, ScreenMyWishlist, ScreenNotifSettings,
+  ScreenActivity, ScreenPrayerVolunteerHistory, ScreenStudyCompletionHistory, ScreenMyWishlist, ScreenNotifSettings,
   ScreenSupport, ScreenFAQ, ScreenInquiry,
   ScreenTerms2, ScreenPrivacy, ScreenBlocked, ScreenAccount,
 });

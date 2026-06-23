@@ -282,6 +282,7 @@ function ScreenStudyDetail() {
               </div>
             ))}
             <button className="btn btn-soft" style={{ width:'100%', justifyContent:'center' }}>평가 설문 작성하기</button>
+            <div className="t-xs" style={{ textAlign:'center' }}>외부 설문 링크로 이동합니다.</div>
           </div>
         </div>
 
@@ -334,7 +335,7 @@ function ScreenStudyDetail() {
       </div>
 
       <div className="bottom-bar">
-        <button className="btn btn-soft" style={{ width: 56, padding: 0 }}>{Icon.book(20)}</button>
+        <button className="btn btn-soft" style={{ minWidth: 104, padding:'0 16px' }}>수강 신청</button>
         <button className="btn btn-primary" style={{ flex: 1 }}>수강 상태 보기</button>
       </div>
     </Phone>

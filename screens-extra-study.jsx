@@ -1,7 +1,50 @@
 // 열린문 커넥트 — 추가 화면 (삶공부)
 
 // ─── 수강 신청 ───
-function ScreenStudyApply() {
+function ScreenStudyApply({ variant = 'form' }) {
+  if (variant === 'complete') {
+    return (
+      <Phone>
+        <TopBar title="수강 신청 완료"/>
+        <div className="phone-body" style={{ padding:'20px 18px' }}>
+          <div className="card" style={{ padding: 22, textAlign:'center' }}>
+            <div style={{
+              width: 58, height: 58, borderRadius: '50%',
+              margin: '0 auto',
+              display:'grid', placeItems:'center',
+              background:'var(--app-primary)', color:'#fff',
+            }}>{Icon.check(28)}</div>
+            <div className="t-h2" style={{ marginTop: 16 }}>신청이 접수됐어요</div>
+            <div className="t-sm" style={{ marginTop: 8, lineHeight: 1.55 }}>
+              생명의 삶 수강 신청이 완료되었습니다. 신청 상태는 수강 내역에서 확인할 수 있어요.
+            </div>
+          </div>
+
+          <Section title="신청 정보" style={{ marginTop: 20 }}>
+            <div style={{ padding:'0 18px' }}>
+              <div className="card" style={{ padding: 16, display:'grid', gap: 10 }}>
+                {[
+                  ['과정', '생명의 삶'],
+                  ['일정', '매주 수 19:30'],
+                  ['상태', '신청 완료'],
+                ].map(([label, value]) => (
+                  <div key={label} style={{ display:'flex', justifyContent:'space-between', gap: 12 }}>
+                    <span className="t-sm">{label}</span>
+                    <span style={{ fontWeight: 850, fontSize:'calc(13px * var(--app-fs-scale))' }}>{value}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </Section>
+        </div>
+        <div className="bottom-bar">
+          <button className="btn btn-soft" style={{ width: 110 }}>과정 목록</button>
+          <button className="btn btn-primary" style={{ flex: 1 }}>수강 상태 보기</button>
+        </div>
+      </Phone>
+    );
+  }
+
   return (
     <Phone>
       <TopBar title="수강 신청"/>
@@ -165,6 +208,24 @@ function ScreenStudyHistory() {
             ))}
           </div>
         </Section>
+
+        <Section title="수료 뱃지">
+          <div style={{ padding:'0 18px' }}>
+            <div className="card" style={{ padding: 16, display:'flex', alignItems:'center', gap: 12 }}>
+              <div style={{
+                width: 48, height: 48, borderRadius: '50%',
+                background:'var(--app-primary-soft)',
+                color:'var(--app-primary-deep)',
+                display:'grid', placeItems:'center', flexShrink: 0,
+              }}>{Icon.check(22)}</div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontWeight: 850, fontSize:'calc(15px * var(--app-fs-scale))' }}>수료 과목 2개</div>
+                <div className="t-sm" style={{ marginTop: 4 }}>MY에서 수료 연도와 기수를 확인할 수 있어요.</div>
+              </div>
+              <button className="btn btn-soft" style={{ height: 38, padding:'0 14px' }}>수료 뱃지 보기</button>
+            </div>
+          </div>
+        </Section>
       </div>
     </Phone>
   );
@@ -228,4 +289,71 @@ function ScreenStudyAdminCourses() {
   );
 }
 
-Object.assign(window, { ScreenStudyApply, ScreenStudyHistory, ScreenStudyAdminCourses });
+function ScreenStudyAdminSessions() {
+  const learners = [
+    { name:'김은혜', state:'출석' },
+    { name:'박정아', state:'지각' },
+    { name:'이수진', state:'결석' },
+    { name:'정혜진', state:'출석' },
+  ];
+  return (
+    <Phone>
+      <TopBar title="수업 관리"/>
+      <div className="phone-body">
+        <Section title="생명의 삶 4주차">
+          <div style={{ padding:'0 18px', display:'grid', gap: 12 }}>
+            <div className="card" style={{ padding: 16 }}>
+              <div className="t-xs" style={{ fontWeight: 800, color:'var(--app-primary-deep)' }}>다음 수업</div>
+              <div style={{ marginTop: 6, fontWeight: 900, fontSize:'calc(17px * var(--app-fs-scale))' }}>6.24 수 19:30</div>
+              <div className="t-sm" style={{ marginTop: 5 }}>본당 3층 소예배실 · 신앙의 근본 세우기</div>
+            </div>
+            <div className="card" style={{ padding: 16 }}>
+              <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', gap: 10 }}>
+                <div style={{ fontWeight: 850 }}>보강 일정</div>
+                <span className="badge badge-amber">등록 필요</span>
+              </div>
+              <div className="t-sm" style={{ marginTop: 8, lineHeight: 1.5 }}>
+                3주차 결석자 1명에게 보강 일정을 안내해야 합니다.
+              </div>
+              <button className="btn btn-soft" style={{ width:'100%', marginTop: 12, justifyContent:'center' }}>보강 일정 등록</button>
+            </div>
+          </div>
+        </Section>
+
+        <Section title="출결 입력">
+          <div style={{ padding:'0 18px', display:'grid', gap: 10 }}>
+            {learners.map((learner) => (
+              <div key={learner.name} className="card" style={{ padding: 14, display:'flex', alignItems:'center', gap: 10 }}>
+                <Avatar name={learner.name} size={36} seed={learner.name}/>
+                <div style={{ flex: 1, fontWeight: 850, fontSize:'calc(14px * var(--app-fs-scale))' }}>{learner.name}</div>
+                {['출석','지각','결석'].map((state) => (
+                  <span key={state} className={'badge ' + (learner.state === state ? 'badge-primary' : 'badge-mute')}>{state}</span>
+                ))}
+              </div>
+            ))}
+          </div>
+        </Section>
+
+        <Section title="공지 읽음 확인">
+          <div style={{ padding:'0 18px', display:'grid', gap: 10 }}>
+            {[
+              ['4주차 과제 안내', '읽음 18 / 20명', '미읽음 2명'],
+              ['보강 일정 공지', '읽음 9 / 10명', '미읽음 1명'],
+            ].map(([title, read, unread]) => (
+              <div key={title} className="card" style={{ padding: 14 }}>
+                <div style={{ fontWeight: 850, fontSize:'calc(14px * var(--app-fs-scale))' }}>{title}</div>
+                <div style={{ marginTop: 8, display:'flex', gap: 6, flexWrap:'wrap' }}>
+                  <span className="badge badge-primary">{read}</span>
+                  <span className="badge badge-amber">{unread}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </Section>
+        <div style={{ height: 12 }}/>
+      </div>
+    </Phone>
+  );
+}
+
+Object.assign(window, { ScreenStudyApply, ScreenStudyHistory, ScreenStudyAdminCourses, ScreenStudyAdminSessions });

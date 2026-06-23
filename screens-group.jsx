@@ -106,20 +106,9 @@ function ScreenGroupList({ variant = 'all' }) {
         )}
       </div>
 
-      {/* FAB */}
-      <button style={{
-        position: 'absolute', right: 16, bottom: 90, zIndex: 20,
-        height: 52, padding: '0 18px 0 16px',
-        borderRadius: 'var(--app-r-pill)',
-        background: 'var(--app-primary)', color: '#fff',
-        display: 'flex', alignItems: 'center', gap: 8,
-        border: 0, cursor: 'pointer',
-        fontFamily: 'inherit', fontSize: 'calc(14px * var(--app-fs-scale))', fontWeight: 700,
-        boxShadow: '0 10px 24px -8px rgba(91,122,176,0.5), 0 4px 8px -2px rgba(20,30,18,0.14)',
-      }}>
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"><path d="M12 5v14M5 12h14"/></svg>
+      <AppFab icon={Icon.plus(18)}>
         개설
-      </button>
+      </AppFab>
 
       <TabBar active="companion"/>
     </Phone>

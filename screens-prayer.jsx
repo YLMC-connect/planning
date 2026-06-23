@@ -280,22 +280,9 @@ function ScreenPrayerList({ variant = 'general' }) {
         )}
       </div>
 
-      <button className="fab" style={{
-        width: 158,
-        height: 56,
-        right: 24,
-        bottom: 92,
-        borderRadius: 'var(--app-r-pill)',
-        display: 'inline-flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: 8,
-        fontSize: 'calc(15px * var(--app-fs-scale))',
-        fontWeight: 850,
-        whiteSpace: 'nowrap',
-      }}>
-        {Icon.plus(20)} 기도제목 등록
-      </button>
+      <AppFab icon={Icon.plus(18)}>
+        기도제목 등록
+      </AppFab>
       <TabBar active="prayer" />
     </Phone>
   );
