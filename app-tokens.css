@@ -10,7 +10,7 @@
   --app-fs-scale:       1;                          /* 0.95 / 1 / 1.08 */
   --app-radius-scale:   1;                          /* 0.7 / 1 / 1.2 */
 
-  --app-bg:             #F6F7F2;
+  --app-bg:             linear-gradient(180deg, #F8F7F0 0%, #EEF1EA 100%);
   --app-surface:        #FFFFFF;
   --app-surface-2:      #FAFBF7;
 
@@ -34,9 +34,9 @@
   --app-r-2xl: calc(32px * var(--app-radius-scale));
   --app-r-pill: 9999px;
 
-  --app-shadow-card:   0 1px 2px rgba(20, 30, 18, 0.04), 0 0 0 1px rgba(20, 30, 18, 0.04);
-  --app-shadow-raised: 0 8px 24px -10px rgba(20, 30, 18, 0.18), 0 1px 2px rgba(20, 30, 18, 0.05), 0 0 0 1px rgba(20, 30, 18, 0.04);
-  --app-shadow-fab:    0 10px 24px -8px rgba(20, 30, 18, 0.30), 0 4px 8px -2px rgba(20, 30, 18, 0.14);
+  --app-shadow-card:   0 10px 24px -20px rgba(20, 30, 18, 0.28), 0 1px 3px rgba(20, 30, 18, 0.05);
+  --app-shadow-raised: 0 18px 42px -24px rgba(20, 30, 18, 0.34), 0 2px 8px rgba(20, 30, 18, 0.08);
+  --app-shadow-fab:    0 16px 28px -12px rgba(91, 122, 176, 0.58), 0 4px 10px -3px rgba(20, 30, 18, 0.18);
 }
 
 /* Phone frame */
@@ -138,17 +138,14 @@
   right: 14px;
   bottom: 14px;
   z-index: 30;
-  background: rgba(255,255,255,0.82);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(255,255,255,0.6);
+  background: rgba(255,255,255,0.90);
+  -webkit-backdrop-filter: blur(22px) saturate(170%);
+  backdrop-filter: blur(22px) saturate(170%);
+  border: 1px solid rgba(255,255,255,0.72);
   border-radius: var(--app-r-pill);
   padding: 7px 6px;
   display: flex;
-  box-shadow:
-    0 14px 32px -10px rgba(20, 30, 18, 0.22),
-    0 2px 6px -2px rgba(20, 30, 18, 0.10),
-    0 0 0 1px rgba(20, 30, 18, 0.04);
+  box-shadow: var(--app-shadow-raised);
 }
 .tabbar button {
   flex: 1;
@@ -172,7 +169,7 @@
 .tabbar button.on {
   background: var(--app-primary);
   color: #fff;
-  box-shadow: 0 6px 14px -6px rgba(107, 130, 96, 0.55);
+  box-shadow: 0 10px 18px -10px rgba(91, 122, 176, 0.74);
 }
 .tabbar button .lbl {
   font-weight: 700;
@@ -195,7 +192,8 @@
 
 /* Cards */
 .card {
-  background: var(--app-surface);
+  background: rgba(255,255,255,0.92);
+  border: 1px solid rgba(255,255,255,0.72);
   border-radius: var(--app-r-l);
   box-shadow: var(--app-shadow-card);
 }
@@ -267,7 +265,7 @@
   white-space: nowrap;
   transition: transform 180ms cubic-bezier(.34,1.6,.64,1);
 }
-.btn-primary { background: var(--app-primary); color: #fff; box-shadow: 0 6px 16px -8px rgba(107, 130, 96, 0.6); }
+.btn-primary { background: var(--app-primary); color: #fff; box-shadow: var(--app-shadow-fab); }
 .btn-soft    { background: var(--app-primary-soft); color: var(--app-primary-deep); }
 .btn-ghost   { background: transparent; color: var(--app-primary-deep); }
 .btn-dark    { background: var(--app-ink); color: #fff; }
@@ -302,19 +300,16 @@
   right: 14px;
   bottom: 14px;
   z-index: 30;
-  background: rgba(255, 255, 255, 0.82);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.90);
+  -webkit-backdrop-filter: blur(22px) saturate(170%);
+  backdrop-filter: blur(22px) saturate(170%);
+  border: 1px solid rgba(255, 255, 255, 0.72);
   border-radius: var(--app-r-pill);
   padding: 8px;
   display: flex;
   align-items: center;
   gap: 8px;
-  box-shadow:
-    0 14px 32px -10px rgba(20, 30, 18, 0.22),
-    0 2px 6px -2px rgba(20, 30, 18, 0.10),
-    0 0 0 1px rgba(20, 30, 18, 0.04);
+  box-shadow: var(--app-shadow-raised);
 }
 .bottom-bar .btn { border-radius: var(--app-r-pill); height: 48px; }
 .bottom-bar .btn-soft { width: 48px !important; padding: 0; background: rgba(20,30,18,0.05); }

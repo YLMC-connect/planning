@@ -2,45 +2,97 @@
 const { useState, useEffect, useMemo, useRef } = React;
 
 // ─────────────────────────────────────────────────────────────
-// Icons — outline / filled, 24px viewBox, currentColor stroke
+// Icons — Lucide-style 24px outline set, kept behind the existing Icon API
 // ─────────────────────────────────────────────────────────────
+function makeIcon(nodes, opts = {}) {
+  return (s = 22) => (
+    <svg
+      width={s}
+      height={s}
+      viewBox="0 0 24 24"
+      fill={opts.fill || 'none'}
+      stroke="currentColor"
+      strokeWidth={opts.strokeWidth || 2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      {nodes.map((node, i) => {
+        if (node.tag === 'circle') return <circle key={i} cx={node.cx} cy={node.cy} r={node.r} />;
+        if (node.tag === 'rect') return <rect key={i} x={node.x} y={node.y} width={node.width} height={node.height} rx={node.rx} />;
+        if (node.tag === 'line') return <line key={i} x1={node.x1} y1={node.y1} x2={node.x2} y2={node.y2} />;
+        if (node.tag === 'polyline') return <polyline key={i} points={node.points} />;
+        return <path key={i} d={node.d} />;
+      })}
+    </svg>
+  );
+}
+
+const I = {
+  home: [{ d:'m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z' }, { d:'M9 22V12h6v10' }],
+  bag: [{ d:'M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z' }, { line:true, tag:'line', x1:3, y1:6, x2:21, y2:6 }, { d:'M16 10a4 4 0 0 1-8 0' }],
+  people: [{ tag:'circle', cx:9, cy:8, r:4 }, { d:'M17 11a3 3 0 1 0-2.83-4' }, { d:'M3 21a6 6 0 0 1 12 0' }, { d:'M17 21a5 5 0 0 0-3-4.58' }],
+  pray: [{ d:'M12 2v20' }, { d:'M7 7h10' }, { d:'M6 22h12' }],
+  book: [{ d:'M12 7v14' }, { d:'M3 5a2 2 0 0 1 2-2h6a1 1 0 0 1 1 1v17a1 1 0 0 0-1-1H5a2 2 0 0 1-2-2z' }, { d:'M21 5a2 2 0 0 0-2-2h-6a1 1 0 0 0-1 1v17a1 1 0 0 1 1-1h6a2 2 0 0 0 2-2z' }],
+  user: [{ tag:'circle', cx:12, cy:8, r:5 }, { d:'M20 21a8 8 0 0 0-16 0' }],
+  bell: [{ d:'M10.27 21a2 2 0 0 0 3.46 0' }, { d:'M3.26 15.33A2 2 0 0 0 5 18h14a2 2 0 0 0 1.74-2.67C20.25 14.09 19 12.8 19 9a7 7 0 0 0-14 0c0 3.8-1.25 5.09-1.74 6.33' }],
+  search: [{ tag:'circle', cx:11, cy:11, r:8 }, { d:'m21 21-4.35-4.35' }],
+  plus: [{ d:'M5 12h14' }, { d:'M12 5v14' }],
+  back: [{ d:'m15 18-6-6 6-6' }],
+  more: [{ tag:'circle', cx:12, cy:12, r:1 }, { tag:'circle', cx:19, cy:12, r:1 }, { tag:'circle', cx:5, cy:12, r:1 }],
+  share: [{ tag:'circle', cx:18, cy:5, r:3 }, { tag:'circle', cx:6, cy:12, r:3 }, { tag:'circle', cx:18, cy:19, r:3 }, { d:'m8.59 13.51 6.83 3.98' }, { d:'m15.41 6.51-6.82 3.98' }],
+  heart: [{ d:'M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 12 5a5.5 5.5 0 0 0-10 3.5c0 2.3 1.5 4.05 3 5.5l7 7Z' }],
+  check: [{ tag:'polyline', points:'20 6 9 17 4 12' }],
+  chevron: [{ d:'m9 18 6-6-6-6' }],
+  chat: [{ d:'M21 15a4 4 0 0 1-4 4H7l-4 4V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z' }],
+  filter: [{ d:'M4 21v-7' }, { d:'M4 10V3' }, { d:'M12 21v-9' }, { d:'M12 8V3' }, { d:'M20 21v-5' }, { d:'M20 12V3' }, { d:'M2 14h4' }, { d:'M10 8h4' }, { d:'M18 16h4' }],
+  cross: [{ d:'M18 6 6 18' }, { d:'m6 6 12 12' }],
+  hand: [{ d:'M18 11V6a2 2 0 0 0-4 0v5' }, { d:'M14 10V4a2 2 0 0 0-4 0v7' }, { d:'M10 10.5V6a2 2 0 0 0-4 0v8' }, { d:'M18 11a2 2 0 1 1 4 0v3a8 8 0 0 1-16 0' }],
+  cart: [{ tag:'circle', cx:8, cy:21, r:1 }, { tag:'circle', cx:19, cy:21, r:1 }, { d:'M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57L22 7H5.12' }],
+  gift: [{ tag:'rect', x:3, y:8, width:18, height:4, rx:1 }, { d:'M12 8v13' }, { d:'M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7' }, { d:'M7.5 8A2.5 2.5 0 1 1 12 6a2.5 2.5 0 1 1 4.5 2' }],
+  cal: [{ tag:'rect', x:3, y:4, width:18, height:18, rx:2 }, { d:'M16 2v4' }, { d:'M8 2v4' }, { d:'M3 10h18' }],
+  speech: [{ d:'M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z' }],
+  flame: [{ d:'M8.5 14.5A2.5 2.5 0 0 0 11 17c2 0 3-1.4 3-3.2 0-2.3-2-3.6-2-5.8 2.8 1.6 5 4.4 5 7.4A5 5 0 1 1 7 15c0-1.5.7-2.9 1.5-4 .1 1.2.4 2.2 0 3.5Z' }],
+  cross2: [{ d:'M11 2h2v7h7v2h-7v11h-2V11H4V9h7z' }],
+  hands: [{ d:'M11 14H5a2 2 0 0 0-2 2v1a3 3 0 0 0 3 3h3' }, { d:'M13 14h6a2 2 0 0 1 2 2v1a3 3 0 0 1-3 3h-3' }, { d:'M8 11V7a2 2 0 1 1 4 0v4' }, { d:'M12 11V6a2 2 0 1 1 4 0v5' }],
+};
+
 const Icon = {
-  home:    (s = 22) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg>,
-  homeOn:  (s = 22) => <svg width={s} height={s} viewBox="0 0 24 24" fill="currentColor"><path d="M12 3l9 8h-2v9h-5v-6h-4v6H5v-9H3l9-8z"/></svg>,
-  bag:     (s = 22) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 8h14l-1 12H6L5 8z"/><path d="M9 8V6a3 3 0 016 0v2"/></svg>,
-  bagOn:   (s = 22) => <svg width={s} height={s} viewBox="0 0 24 24" fill="currentColor"><path d="M9 6a3 3 0 116 0v2h3.4l-1.2 13H6.8L5.6 8H9V6zm2 2h2V6a1 1 0 10-2 0v2z"/></svg>,
-  people:  (s = 22) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="9" cy="9" r="3.2"/><circle cx="17" cy="10" r="2.4"/><path d="M3.5 19c.5-3 3-4.5 5.5-4.5s5 1.5 5.5 4.5"/><path d="M15 19c.4-2.2 2-3.4 4-3.4s2.7.8 3 2"/></svg>,
-  peopleOn:(s = 22) => <svg width={s} height={s} viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="8.5" r="3.4"/><circle cx="17" cy="9.5" r="2.6"/><path d="M3 19.5c.6-3.4 3.2-5.2 6-5.2s5.4 1.8 6 5.2H3z"/><path d="M16 14.5c1 2 1.5 3.5 1.7 5h4.3c-.2-2.6-1.7-4.5-4-4.5-.7 0-1.4.2-2 .5z"/></svg>,
-  pray:    (s = 22) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3v18"/><path d="M7 8h10"/><path d="M6 21h12"/></svg>,
-  prayOn:  (s = 22) => <svg width={s} height={s} viewBox="0 0 24 24" fill="currentColor"><path d="M10.5 3h3v5H18v3h-4.5v10h-3V11H6V8h4.5V3z"/><path d="M6 21h12v-2H6v2z"/></svg>,
-  book:    (s = 22) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 4h10a3 3 0 013 3v13H8a3 3 0 01-3-3V4z"/><path d="M5 17a3 3 0 013-3h10"/></svg>,
-  bookOn:  (s = 22) => <svg width={s} height={s} viewBox="0 0 24 24" fill="currentColor"><path d="M5 4h10a3 3 0 013 3v13H8a3 3 0 01-3-3V4zm3 12h9V7a1 1 0 00-1-1H7v10z"/></svg>,
-  user:    (s = 22) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="9" r="3.6"/><path d="M5 20c1-3.6 3.8-5 7-5s6 1.4 7 5"/></svg>,
-  userOn:  (s = 22) => <svg width={s} height={s} viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="9" r="3.8"/><path d="M4.5 20.5c.5-3.6 3.6-5.5 7.5-5.5s7 1.9 7.5 5.5H4.5z"/></svg>,
-  bell:    (s = 22) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 16V11a6 6 0 0112 0v5l1.5 2h-15L6 16z"/><path d="M10 20a2 2 0 004 0"/></svg>,
-  search:  (s = 18) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>,
-  plus:    (s = 22) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M12 5v14M5 12h14"/></svg>,
-  back:    (s = 22) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 5l-7 7 7 7"/></svg>,
-  more:    (s = 22) => <svg width={s} height={s} viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="19" cy="12" r="1.7"/></svg>,
-  share:   (s = 20) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 10.6l6.8-3.9M8.6 13.4l6.8 3.9"/></svg>,
-  heart:   (s = 22) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20.5 8.5a5.4 5.4 0 00-9-3 5.4 5.4 0 00-9 3c0 7 9 11.5 9 11.5s9-4.5 9-11.5z"/></svg>,
-  heartOn: (s = 22) => <svg width={s} height={s} viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 8.5a5.4 5.4 0 00-9-3 5.4 5.4 0 00-9 3c0 7 9 11.5 9 11.5s9-4.5 9-11.5z"/></svg>,
-  check:   (s = 18) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="5 12 10 17 19 7"/></svg>,
-  chevron: (s = 18) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 6l6 6-6 6"/></svg>,
-  chev:    (s = 18) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 6l6 6-6 6"/></svg>,
-  chat:    (s = 22) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 5h16v11H8l-4 4V5z"/></svg>,
-  filter:  (s = 18) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 5h18M6 12h12M10 19h4"/></svg>,
-  cross:   (s = 18) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>,
-  hand:    (s = 22) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 11V5.5a1.5 1.5 0 013 0V10"/><path d="M12 10V4.5a1.5 1.5 0 013 0V11"/><path d="M15 11V6.5a1.5 1.5 0 013 0v8a6 6 0 01-12 0v-2.5a1.5 1.5 0 013 0V13"/></svg>,
-  cart:    (s = 22) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 5h2.5L7 16h11l2-8H7"/><circle cx="9" cy="20" r="1.4"/><circle cx="17" cy="20" r="1.4"/></svg>,
-  gift:    (s = 22) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="9" width="18" height="5" rx="1"/><path d="M5 14v7h14v-7M12 9v12"/><path d="M12 9c-3 0-5-1-5-3a2 2 0 015 0 2 2 0 015 0c0 2-2 3-5 3z"/></svg>,
-  cal:     (s = 22) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>,
-  speech:  (s = 18) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 5h16v10H10l-5 4v-4H4z"/></svg>,
-  flame:   (s = 18) => <svg width={s} height={s} viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c1 3.5 4 5 4 9a5 5 0 11-10 0c0-1 0-2 .7-2.7-.4 1.7.7 2.5 1.5 2.2C7.5 8 9.5 6 12 2z"/></svg>,
-  cross2:  (s = 22) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round"><path d="M10.5 3h3v6.5H20v3h-6.5V21h-3v-8.5H4v-3h6.5z"/></svg>,
-  cross2On:(s = 22) => <svg width={s} height={s} viewBox="0 0 24 24" fill="currentColor"><path d="M10.5 3h3v6.5H20v3h-6.5V21h-3v-8.5H4v-3h6.5z"/></svg>,
-  hands:   (s = 22) => <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20.5s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10.5c0 5.5-7 10-7 10z"/></svg>,
-  handsOn: (s = 22) => <svg width={s} height={s} viewBox="0 0 24 24" fill="currentColor"><path d="M12 20.5s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10.5c0 5.5-7 10-7 10z"/></svg>,
+  home: makeIcon(I.home),
+  homeOn: makeIcon(I.home, { strokeWidth: 2.5 }),
+  bag: makeIcon(I.bag),
+  bagOn: makeIcon(I.bag, { strokeWidth: 2.5 }),
+  people: makeIcon(I.people),
+  peopleOn: makeIcon(I.people, { strokeWidth: 2.5 }),
+  pray: makeIcon(I.pray),
+  prayOn: makeIcon(I.pray, { strokeWidth: 2.5 }),
+  book: makeIcon(I.book),
+  bookOn: makeIcon(I.book, { strokeWidth: 2.5 }),
+  user: makeIcon(I.user),
+  userOn: makeIcon(I.user, { strokeWidth: 2.5 }),
+  bell: makeIcon(I.bell),
+  search: makeIcon(I.search),
+  plus: makeIcon(I.plus, { strokeWidth: 2.5 }),
+  back: makeIcon(I.back),
+  more: makeIcon(I.more),
+  share: makeIcon(I.share),
+  heart: makeIcon(I.heart),
+  heartOn: makeIcon(I.heart, { fill: 'currentColor' }),
+  check: makeIcon(I.check, { strokeWidth: 3 }),
+  chevron: makeIcon(I.chevron),
+  chev: makeIcon(I.chevron),
+  chat: makeIcon(I.chat),
+  filter: makeIcon(I.filter),
+  cross: makeIcon(I.cross),
+  hand: makeIcon(I.hand),
+  cart: makeIcon(I.cart),
+  gift: makeIcon(I.gift),
+  cal: makeIcon(I.cal),
+  speech: makeIcon(I.speech),
+  flame: makeIcon(I.flame),
+  cross2: makeIcon(I.cross2),
+  cross2On: makeIcon(I.cross2, { strokeWidth: 2.5 }),
+  hands: makeIcon(I.hands),
+  handsOn: makeIcon(I.hands, { strokeWidth: 2.5 }),
 };
 
 // Status bar (mock iPhone)

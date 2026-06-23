@@ -577,8 +577,148 @@ function MobilePreview({ sections }) {
   );
 }
 
+function DesignSystemPage({ onClose }) {
+  const colors = [
+    ['Primary', '#5B7AB0', '주요 버튼 / 선택 상태'],
+    ['Deep sage', '#516B4A', '홈·기도 강조 그라데이션'],
+    ['Light sage', '#B5C4A4', '부드러운 보조 톤'],
+    ['Amber', '#D2A24C', '대기 / 주의'],
+    ['Rose', '#C97C6E', '반려 / 위험'],
+    ['Premium bg', 'linear-gradient(180deg, #F8F7F0 0%, #EEF1EA 100%)', '앱 배경'],
+  ];
+  const icons = [
+    ['홈', Icon.home],
+    ['나눔', Icon.gift],
+    ['동행', Icon.people],
+    ['기도', Icon.pray],
+    ['삶공부', Icon.book],
+    ['MY', Icon.user],
+    ['등록', Icon.plus],
+    ['이동', Icon.chevron],
+  ];
+
+  const cardStyle = {
+    background: 'rgba(255,255,255,0.92)',
+    border: '1px solid rgba(255,255,255,0.74)',
+    borderRadius: 24,
+    boxShadow: '0 18px 48px -32px rgba(20,30,18,0.34), 0 1px 3px rgba(20,30,18,0.05)',
+    padding: 22,
+  };
+
+  return (
+    <div data-preview-ui style={{
+      minHeight: '100vh',
+      background: 'linear-gradient(180deg, #F8F7F0 0%, #EEF1EA 100%)',
+      fontFamily: DC.font,
+      color: '#1E2920',
+      padding: '74px 28px 44px',
+      boxSizing: 'border-box',
+    }}>
+      <div style={{ maxWidth: 1060, margin: '0 auto' }}>
+        <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', gap: 20, marginBottom: 22 }}>
+          <div>
+            <div style={{ fontSize: 13, fontWeight: 900, color:'#47608E', marginBottom: 8 }}>YLMC CONNECT</div>
+            <h1 style={{ margin: 0, fontSize: 34, lineHeight: 1.15, letterSpacing: -0.4 }}>디자인 시스템</h1>
+            <p style={{ margin: '10px 0 0', color:'rgba(30,41,32,0.64)', fontSize: 15, lineHeight: 1.6 }}>
+              기존의 따뜻한 아이보리·세이지 톤을 유지하고, Lucide 아이콘과 깊이 있는 카드 규칙으로 정리합니다.
+            </p>
+          </div>
+          <button onClick={onClose} style={{
+            height: 38,
+            padding: '0 16px',
+            border: 0,
+            borderRadius: 999,
+            background: '#1E2920',
+            color: '#fff',
+            font: 'inherit',
+            fontSize: 13,
+            fontWeight: 850,
+            boxShadow: '0 10px 28px rgba(0,0,0,.16)',
+          }}>닫기</button>
+        </div>
+
+        <div style={{ display:'grid', gridTemplateColumns:'1.1fr .9fr', gap: 18 }}>
+          <section style={cardStyle}>
+            <h2 style={{ margin:'0 0 14px', fontSize: 18 }}>Color</h2>
+            <div style={{ display:'grid', gridTemplateColumns:'repeat(3, 1fr)', gap: 12 }}>
+              {colors.map(([name, value, usage]) => (
+                <div key={name} style={{ border:'1px solid rgba(30,41,32,0.08)', borderRadius: 18, overflow:'hidden', background:'#fff' }}>
+                  <div style={{ height: 72, background: value }} />
+                  <div style={{ padding: 12 }}>
+                    <div style={{ fontWeight: 900, fontSize: 13 }}>{name}</div>
+                    <div style={{ marginTop: 3, fontSize: 11, color:'rgba(30,41,32,0.54)' }}>{value}</div>
+                    <div style={{ marginTop: 6, fontSize: 12, lineHeight: 1.35, color:'rgba(30,41,32,0.66)' }}>{usage}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <section style={cardStyle}>
+            <h2 style={{ margin:'0 0 14px', fontSize: 18 }}>Typography</h2>
+            <div style={{ fontWeight: 900, fontSize: 32, letterSpacing: -0.4 }}>Pretendard</div>
+            <div style={{ marginTop: 8, color:'rgba(30,41,32,0.64)', lineHeight: 1.55 }}>50~60대 사용자를 기준으로 본문은 작게 줄이지 않고, 여백과 굵기로 위계를 만듭니다.</div>
+            <div style={{ marginTop: 18, display:'grid', gap: 10 }}>
+              <div style={{ fontSize: 22, fontWeight: 900 }}>화면 제목 22 / 900</div>
+              <div style={{ fontSize: 16, fontWeight: 850 }}>카드 제목 16 / 850</div>
+              <div style={{ fontSize: 14, lineHeight: 1.55, color:'rgba(30,41,32,0.72)' }}>본문 14 / line-height 1.55</div>
+              <div style={{ fontSize: 12, color:'rgba(30,41,32,0.50)' }}>보조 정보 12</div>
+            </div>
+          </section>
+
+          <section style={cardStyle}>
+            <h2 style={{ margin:'0 0 14px', fontSize: 18 }}>Lucide Icons</h2>
+            <div style={{ display:'grid', gridTemplateColumns:'repeat(4, 1fr)', gap: 12 }}>
+              {icons.map(([label, RenderIcon]) => (
+                <div key={label} style={{
+                  minHeight: 96,
+                  borderRadius: 18,
+                  background: '#FAFBF7',
+                  border: '1px solid rgba(30,41,32,0.08)',
+                  display:'grid',
+                  placeItems:'center',
+                  gap: 6,
+                  color:'#47608E',
+                }}>
+                  {RenderIcon(28)}
+                  <div style={{ fontSize: 12, fontWeight: 800, color:'#1E2920' }}>{label}</div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <section style={cardStyle}>
+            <h2 style={{ margin:'0 0 14px', fontSize: 18 }}>Components</h2>
+            <div style={{ display:'grid', gap: 12 }}>
+              <div style={{
+                padding: 18,
+                borderRadius: 20,
+                background: 'linear-gradient(130deg, #516B4A 0%, #7F9B72 56%, #B5C4A4 100%)',
+                color:'#fff',
+                boxShadow: '0 18px 36px -22px rgba(63,91,58,0.74), inset 0 1px 0 rgba(255,255,255,0.20)',
+              }}>
+                <div style={{ fontSize: 12, fontWeight: 850, opacity: .86 }}>강조 카드</div>
+                <div style={{ marginTop: 7, fontWeight: 900, fontSize: 17 }}>오늘의 기도제목</div>
+                <div style={{ marginTop: 6, fontSize: 13, lineHeight: 1.5, opacity: .88 }}>깊은 그라데이션과 부드러운 그림자로 홈의 중심 정보를 강조합니다.</div>
+              </div>
+              <div style={{ display:'flex', gap: 8, flexWrap:'wrap' }}>
+                <button className="btn btn-primary" style={{ height: 46 }}>주요 버튼</button>
+                <button className="btn btn-soft" style={{ height: 46 }}>보조 버튼</button>
+                <span className="badge badge-primary">승인</span>
+                <span className="badge badge-amber">대기</span>
+                <span className="badge badge-rose">반려</span>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function App() {
   const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
+  const [designSystemOpen, setDesignSystemOpen] = React.useState(false);
 
   React.useEffect(() => {
     applyPrimary(t.primary);
@@ -589,7 +729,9 @@ function App() {
   return (
     <>
       <window.ButtonStateContext.Provider value={t.buttonState}>
-      {t.mobilePreview ? (
+      {designSystemOpen ? (
+        <DesignSystemPage onClose={() => setDesignSystemOpen(false)} />
+      ) : t.mobilePreview ? (
         <MobilePreview sections={APP_SECTIONS} />
       ) : (
         <DesignCanvas>
@@ -620,6 +762,26 @@ function App() {
         cursor: 'pointer',
       }}>
         {t.mobilePreview ? '캔버스 보기' : '모바일 프리뷰'}
+      </button>
+
+      <button data-preview-ui onClick={() => setDesignSystemOpen(true)} style={{
+        position: 'fixed',
+        top: 58,
+        right: 16,
+        zIndex: 120,
+        height: 36,
+        padding: '0 14px',
+        border: 0,
+        borderRadius: 999,
+        background: designSystemOpen ? '#1E2920' : '#fff',
+        color: designSystemOpen ? '#fff' : '#1E2920',
+        font: 'inherit',
+        fontSize: 13,
+        fontWeight: 850,
+        boxShadow: '0 10px 28px rgba(0,0,0,.16)',
+        cursor: 'pointer',
+      }}>
+        디자인 시스템
       </button>
 
       <TweaksPanel title="Tweaks">

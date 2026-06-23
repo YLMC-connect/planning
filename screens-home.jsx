@@ -15,18 +15,17 @@ function ScreenHome() {
         <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom: 10 }}>
           <div className="t-xs" style={{ fontWeight: 800, color: 'var(--app-primary-deep)' }}>열린문 커넥트</div>
         </div>
-        <button aria-label="내 정보 보기" style={{
+        <button className="card" aria-label="내 정보 보기" style={{
           width: '100%',
           minHeight: 68,
-          borderRadius: 18,
-          border: '1px solid var(--app-line)',
-          background: 'var(--app-surface)',
+          borderRadius: 20,
           display: 'flex',
           alignItems: 'center',
           gap: 12,
           padding: '12px 14px',
           textAlign: 'left',
-          boxShadow: '0 2px 8px rgba(20,30,18,0.05)',
+          fontFamily: 'inherit',
+          color: 'inherit',
         }}>
           <Avatar name="김은혜" size={42} seed="김은혜" />
           <div style={{ flex: 1, minWidth: 0 }}>
@@ -63,18 +62,18 @@ function ScreenHome() {
             padding: 18,
             position:'relative',
             overflow:'hidden',
-            background: 'linear-gradient(125deg, #6B8260 0%, #8FA882 62%, #B5C4A4 100%)',
+            background: 'linear-gradient(130deg, #516B4A 0%, #7F9B72 56%, #B5C4A4 100%)',
             color: '#fff',
             border: 0,
-            boxShadow: '0 8px 22px -10px rgba(107,130,96,0.5)',
+            boxShadow: '0 18px 36px -22px rgba(63,91,58,0.74), inset 0 1px 0 rgba(255,255,255,0.20)',
           }}>
-            <svg style={{ position:'absolute', right: -22, bottom: -38, opacity: .18 }} width="150" height="150" viewBox="0 0 120 120" fill="#fff"><circle cx="60" cy="60" r="56"/></svg>
-            <div className="t-xs" style={{ fontWeight: 700, color:'rgba(255,255,255,0.82)' }}>오늘의 기도제목</div>
+            <svg style={{ position:'absolute', right: -22, bottom: -38, opacity: .14 }} width="150" height="150" viewBox="0 0 120 120" fill="#fff"><circle cx="60" cy="60" r="56"/></svg>
+            <div className="t-xs" style={{ fontWeight: 800, color:'rgba(255,255,255,0.84)' }}>오늘의 기도제목</div>
             <div style={{ marginTop: 8, fontWeight: 850, fontSize:'calc(16px * var(--app-fs-scale))', lineHeight: 1.5, color:'#fff' }}>
               가정과 일터에서 믿음의 선택을 하도록 기도합니다.
             </div>
-            <div className="t-sm" style={{ marginTop: 10, color:'rgba(255,255,255,0.86)' }}>월요일 공통 기도제목</div>
-            <div style={{ position:'absolute', right: -10, top: -10, color:'rgba(255,255,255,0.25)' }}>
+            <div className="t-sm" style={{ marginTop: 10, color:'rgba(255,255,255,0.88)' }}>월요일 공통 기도제목</div>
+            <div style={{ position:'absolute', right: -10, top: -10, color:'rgba(255,255,255,0.22)' }}>
               {Icon.pray(56)}
             </div>
           </div>
@@ -90,11 +89,16 @@ function ScreenHome() {
                 alignItems:'center',
                 gap: 12,
                 textAlign:'left',
-                border:'1px solid var(--app-line)',
-                background:'var(--app-surface)',
-                boxShadow:'0 1px 3px rgba(20,30,18,0.05)',
+                fontFamily: 'inherit',
+                color: 'inherit',
               }}>
-                <div style={{ width: 4, alignSelf:'stretch', borderRadius: 999, background:item.color, flexShrink: 0 }}/>
+                <div style={{
+                  width: 6,
+                  alignSelf:'stretch',
+                  borderRadius: 999,
+                  background:`linear-gradient(180deg, ${item.color}, rgba(30,41,32,0.18))`,
+                  flexShrink: 0,
+                }}/>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div className="t-xs" style={{ fontWeight: 800, color:'var(--app-ink-mute)' }}>{item.title}</div>
                   <div style={{ marginTop: 5, fontWeight: 850, fontSize:'calc(15px * var(--app-fs-scale))', lineHeight: 1.35, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{item.value}</div>
