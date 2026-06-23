@@ -168,12 +168,13 @@ const APP_SECTIONS = [
   {
     id: 'study',
     title: '삶공부',
-    subtitle: '목록 · 상세 · 수강 신청 · 수강 내역',
+    subtitle: '과정 목록 · 상세 · 신청 · 수강 상태 · 운영 관리',
     boards: [
-      b('study-list', '과정 목록', ScreenStudyList),
-      b('study-detail', '과정 상세', ScreenStudyDetail),
-      b('study-apply', '수강 신청', ScreenStudyApply),
-      b('study-history', '수강 내역', ScreenStudyHistory),
+      b('study-list', '31 · 삶공부 전체 과정 목록 (FUNC-060,062)', ScreenStudyList),
+      b('study-detail', '32 · 삶공부 과정 상세 (FUNC-061,064~067)', ScreenStudyDetail),
+      b('study-apply', '33 · 삶공부 수강 신청 (FUNC-063)', ScreenStudyApply),
+      b('study-history', '34 · 삶공부 수강 상태 조회 (FUNC-064)', ScreenStudyHistory),
+      b('study-admin', '35 · 삶공부 과정 운영 관리 (FUNC-059)', ScreenStudyAdminCourses),
     ],
   },
   {
@@ -181,7 +182,7 @@ const APP_SECTIONS = [
     title: 'MY',
     subtitle: '홈 상단 진입 · 프로필 · 활동 · 차단 · 고객센터 · 약관 · 계정',
     boards: [
-      b('me', '5 · 마이페이지 (FUNC-005)', ScreenMyPage, { variant: 'default' }),
+      b('me', '5 · 마이페이지 (FUNC-005,068)', ScreenMyPage, { variant: 'default' }),
       b('me-logout', '5-1 · 로그아웃 팝업 (FUNC-008)', ScreenLogoutConfirm),
       b('me-edit', '6 · 프로필 수정 (FUNC-006)', ScreenEditProfile, { variant: 'default' }),
       b('me-edit-phone', '6-1 · 프로필 수정 — 연락처 중복', ScreenEditProfile, { variant: 'phone-dup' }),
