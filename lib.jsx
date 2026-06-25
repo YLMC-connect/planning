@@ -286,12 +286,12 @@ function ChipRow({ items, active, onChange, style }) {
 }
 
 // Pill segmented tab (full width)
-function SegTabs({ items, active }) {
+function SegTabs({ items, active, onChange }) {
   return (
     <div style={{
       display:'flex', gap: 4, padding: 4, margin: '0 18px',
       background: 'rgba(30,41,32,0.05)', borderRadius: 'var(--app-r-pill)',
-    }}>
+    }} data-preview-ui>
       {items.map(it => {
         const on = it.key === active;
         return (
@@ -303,7 +303,8 @@ function SegTabs({ items, active }) {
             color: on ? 'var(--app-ink)' : 'var(--app-ink-mute)',
             fontWeight: on ? 700 : 600,
             fontSize: 'calc(13px * var(--app-fs-scale))',
-          }}>{it.label}</div>
+            cursor: onChange ? 'pointer' : 'default',
+          }} onClick={() => onChange?.(it.key)}>{it.label}</div>
         );
       })}
     </div>
@@ -368,13 +369,13 @@ function AlertDialog({ title, message, cancelText = '취소', confirmText = '확
           }}>{message}</div>
         )}
         <div style={{ marginTop: 22, display: 'flex', gap: 8 }}>
-          <button style={{
+          {cancelText && <button style={{
             flex: 1, height: 44, border: 0, borderRadius: 12,
             background: 'var(--app-surface-2)',
             color: 'var(--app-ink-soft)',
             fontFamily: 'inherit', fontSize: 'calc(14px * var(--app-fs-scale))',
             fontWeight: 600, cursor: 'pointer',
-          }}>{cancelText}</button>
+          }}>{cancelText}</button>}
           <button style={{
             flex: 1, height: 44, border: 0, borderRadius: 12,
             background: danger ? 'var(--app-danger)' : 'var(--app-primary)',

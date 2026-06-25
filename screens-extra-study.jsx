@@ -2,6 +2,7 @@
 
 // ─── 수강 신청 ───
 function ScreenStudyApply({ variant = 'form' }) {
+  const [showErrors, setShowErrors] = useState(false);
   if (variant === 'complete') {
     return (
       <Phone>
@@ -38,8 +39,7 @@ function ScreenStudyApply({ variant = 'form' }) {
           </Section>
         </div>
         <div className="bottom-bar">
-          <button className="btn btn-soft" style={{ width: 110 }}>과정 목록</button>
-          <button className="btn btn-primary" style={{ flex: 1 }}>수강 상태 보기</button>
+          <button className="btn btn-primary" style={{ flex: 1 }}>수강 내역 보기</button>
         </div>
       </Phone>
     );
@@ -48,7 +48,7 @@ function ScreenStudyApply({ variant = 'form' }) {
   return (
     <Phone>
       <TopBar title="수강 신청"/>
-      <div className="phone-body" style={{ padding:'4px 18px 20px' }}>
+      <div className="phone-body" style={{ padding:'4px 18px 112px' }}>
         {/* 과정 요약 */}
         <div className="card" style={{ padding: 16, marginBottom: 20, display:'flex', gap: 12, alignItems:'center' }}>
           <Cover w={72} h={72} seed={1} icon={Icon.book(20)}/>
@@ -78,7 +78,8 @@ function ScreenStudyApply({ variant = 'form' }) {
 
         <div style={{ display:'flex', flexDirection:'column', gap: 20 }}>
           <FormField label="이름">
-            <input className="input" defaultValue="김은혜"/>
+            <input className="input" value={showErrors ? '' : '김은혜'} readOnly/>
+            {showErrors && <div className="t-xs" style={{ marginTop: 6, color:'var(--app-danger)' }}>이름을 입력해주세요</div>}
           </FormField>
           <div style={{ display:'flex', gap: 12 }}>
             <FormField label="연락처" style={{ flex: 1 }}>
@@ -100,6 +101,7 @@ function ScreenStudyApply({ variant = 'form' }) {
           </FormField>
           <FormField label="신청 동기">
             <textarea className="input" rows={4} placeholder="신청하시는 이유를 자유롭게 적어주세요" style={{ resize:'none', fontFamily:'inherit' }}/>
+            {showErrors && <div className="t-xs" style={{ marginTop: 6, color:'var(--app-danger)' }}>신청 동기를 입력해주세요</div>}
           </FormField>
           <div style={{
             padding: 14, borderRadius:'var(--app-r-m)',
@@ -121,7 +123,7 @@ function ScreenStudyApply({ variant = 'form' }) {
         </div>
       </div>
       <div className="bottom-bar">
-        <button className="btn btn-primary" style={{ flex: 1 }}>수강 신청하기</button>
+        <button data-preview-ui className="btn btn-primary" style={{ flex: 1 }} onClick={() => setShowErrors(true)}>수강 신청하기</button>
       </div>
     </Phone>
   );
@@ -129,6 +131,9 @@ function ScreenStudyApply({ variant = 'form' }) {
 
 // ─── 수강 내역 ───
 function ScreenStudyHistory() {
+  const applications = [
+    { name:'생명의 삶', when:'2026.07.08 개강', status:'신청 접수', next:'관리자 확인 후 수강 여부가 확정됩니다', seed:1 },
+  ];
   const ongoing = [
     { name:'생명의 삶', when:'2026.07 ~ 2026.10', progress: 31, week:'4/13주차', status:'수강 중', next:'다음 수업 6.24 수 19:30', seed:1 },
   ];
@@ -145,6 +150,25 @@ function ScreenStudyHistory() {
     <Phone>
       <TopBar title="수강 내역"/>
       <div className="phone-body">
+        <Section title="신청중">
+          <div style={{ padding:'0 18px', display:'flex', flexDirection:'column', gap: 12 }}>
+            {applications.map((c, i) => (
+              <div key={i} className="card" style={{ padding: 16, display:'flex', gap: 12, alignItems:'center' }}>
+                <Cover w={56} h={56} seed={c.seed} icon={Icon.book(18)}/>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontWeight:700, fontSize:'calc(15px * var(--app-fs-scale))' }}>{c.name}</div>
+                  <div className="t-sm" style={{ color:'var(--app-ink-mute)', marginTop: 4 }}>{c.when}</div>
+                  <div className="t-xs" style={{ marginTop: 4 }}>{c.next}</div>
+                </div>
+                <div style={{ display:'grid', gap: 8, justifyItems:'end' }}>
+                  <span className="badge badge-amber">{c.status}</span>
+                  <button className="btn btn-soft" style={{ height: 34, padding:'0 12px' }}>신청 상태 확인</button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </Section>
+
         <Section title="수강 중">
           <div style={{ padding:'0 18px', display:'flex', flexDirection:'column', gap: 12 }}>
             {ongoing.map((c, i) => (
@@ -170,7 +194,7 @@ function ScreenStudyHistory() {
           </div>
         </Section>
 
-        <Section title="대기">
+        <Section title="추천 과정">
           <div style={{ padding:'0 18px', display:'flex', flexDirection:'column', gap: 12 }}>
             {waiting.map((c, i) => (
               <div key={i} className="card" style={{ padding: 16, display:'flex', gap: 12, alignItems:'center' }}>
@@ -231,17 +255,16 @@ function ScreenStudyHistory() {
   );
 }
 
-// ─── 과정 운영 관리 ───
+// ─── 내 담당 삶공부 관리 ───
 function ScreenStudyAdminCourses() {
   const courses = [
-    ...window.LIFE_STUDY_REQUIRED.map((c, i) => ({ ...c, type:'필수', learners: i === 0 ? 24 : 0 })),
-    ...window.LIFE_STUDY_OPTIONAL.map((c) => ({ ...c, type:'선택', status:'신청가능', learners: 0 })),
+    { ...window.LIFE_STUDY_REQUIRED[0], type:'필수', status:'진행중', learners: 24 },
   ];
   return (
     <Phone>
-      <TopBar title="삶공부 운영 관리"/>
+      <TopBar title="내 담당 삶공부"/>
       <div className="phone-body">
-        <Section title="과정 목록">
+        <Section title="내 담당 과정">
           <div style={{ padding:'0 18px', display:'grid', gap: 12 }}>
             {courses.map((c, i) => (
               <div key={i} className="card" style={{ padding: 15, boxShadow:'0 1px 3px rgba(20,30,18,0.05)' }}>
@@ -291,10 +314,10 @@ function ScreenStudyAdminCourses() {
 
 function ScreenStudyAdminSessions() {
   const learners = [
-    { name:'김은혜', state:'출석' },
-    { name:'박정아', state:'지각' },
-    { name:'이수진', state:'결석' },
-    { name:'정혜진', state:'출석' },
+    { name:'김은혜', state:'출석', homework:'제출' },
+    { name:'박정아', state:'지각', homework:'미제출' },
+    { name:'이수진', state:'결석', homework:'미제출' },
+    { name:'정혜진', state:'출석', homework:'제출' },
   ];
   return (
     <Phone>
@@ -320,15 +343,27 @@ function ScreenStudyAdminSessions() {
           </div>
         </Section>
 
-        <Section title="출결 입력">
+        <Section title="출결·숙제 입력">
           <div style={{ padding:'0 18px', display:'grid', gap: 10 }}>
             {learners.map((learner) => (
-              <div key={learner.name} className="card" style={{ padding: 14, display:'flex', alignItems:'center', gap: 10 }}>
-                <Avatar name={learner.name} size={36} seed={learner.name}/>
-                <div style={{ flex: 1, fontWeight: 850, fontSize:'calc(14px * var(--app-fs-scale))' }}>{learner.name}</div>
-                {['출석','지각','결석'].map((state) => (
-                  <span key={state} className={'badge ' + (learner.state === state ? 'badge-primary' : 'badge-mute')}>{state}</span>
-                ))}
+              <div key={learner.name} className="card" style={{ padding: 14, display:'grid', gap: 10 }}>
+                <div style={{ display:'flex', alignItems:'center', gap: 10 }}>
+                  <Avatar name={learner.name} size={36} seed={learner.name}/>
+                  <div style={{ flex: 1, fontWeight: 850, fontSize:'calc(14px * var(--app-fs-scale))' }}>{learner.name}</div>
+                </div>
+                <div style={{ display:'flex', gap: 6, flexWrap:'wrap' }}>
+                  {['출석','지각','결석'].map((state) => (
+                    <span key={state} className={'badge ' + (learner.state === state ? 'badge-primary' : 'badge-mute')}>{state}</span>
+                  ))}
+                  {['숙제 제출','숙제 미제출'].map((state) => (
+                    <span key={state} className={'badge ' + (
+                      (learner.homework === '제출' && state === '숙제 제출') ||
+                      (learner.homework === '미제출' && state === '숙제 미제출')
+                        ? 'badge-amber'
+                        : 'badge-mute'
+                    )}>{state}</span>
+                  ))}
+                </div>
               </div>
             ))}
           </div>
