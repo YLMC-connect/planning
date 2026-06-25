@@ -172,7 +172,6 @@ const APP_SECTIONS = [
     subtitle: '과정 목록 · 상세 · 신청 · 수강 내역 · 담당 수업 관리',
     boards: [
       b('study-list', '31 · 삶공부 전체 과정 목록 (FUNC-060,062)', ScreenStudyList),
-      b('study-list-required-complete', '31-2 · 삶공부 전체 과정 목록 — 필수 완료', ScreenStudyList, { variant: 'required-complete' }),
       b('study-list-admin', '31-1 · 삶공부 전체 과정 목록 — 관리자 (FUNC-059)', ScreenStudyList, { variant: 'admin' }),
       b('study-detail', '32 · 삶공부 과정 상세 — 신청 가능 (FUNC-061)', ScreenStudyDetail),
       b('study-detail-enrolled', '32-1 · 삶공부 과정 상세 — 진행중 (FUNC-064~067)', ScreenStudyDetail, { variant: 'enrolled' }),

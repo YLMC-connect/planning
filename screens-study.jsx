@@ -28,12 +28,9 @@ Object.assign(window, { LIFE_STUDY_REQUIRED, LIFE_STUDY_OPTIONAL });
 
 function ScreenStudyList({ variant = 'default' } = {}) {
   const isAdmin = variant === 'admin';
-  const isRequiredComplete = variant === 'required-complete';
-  const [courseTab, setCourseTab] = useState(isRequiredComplete || variant === 'optional' ? 'optional' : 'required');
+  const [courseTab, setCourseTab] = useState(variant === 'optional' ? 'optional' : 'required');
   const required = LIFE_STUDY_REQUIRED;
   const optional = LIFE_STUDY_OPTIONAL;
-  const requiredDone = isRequiredComplete ? 5 : 1;
-  const requiredPercent = isRequiredComplete ? 100 : 20;
   const openCourses = [
     { name:'생명의 삶', type:'필수', weeks:'13주', leader:'박귀원', period:'6.24 ~ 7.05', seats:'18 / 24명', summary:'신앙의 근본을 바로 세우는 가장 기본 과정' },
     { name:'생명언어의 삶', type:'선택', weeks:'13주', leader:'김숙자 이연홍', period:'6.24 ~ 7.05', seats:'10 / 16명', summary:'하나님 자녀의 품격에 맞는 언어습관 훈련' },
@@ -63,43 +60,27 @@ function ScreenStudyList({ variant = 'default' } = {}) {
               <div style={{ display:'flex', justifyContent:'space-between', alignItems:'baseline', gap: 10 }}>
                 <div>
                   <div className="t-xs" style={{ fontWeight: 800, color:'var(--app-primary-deep)' }}>필수 과정 진행률</div>
-                  <div style={{ marginTop: 5, fontWeight: 900, fontSize:'calc(18px * var(--app-fs-scale))' }}>{requiredDone} / 5 완료</div>
+                  <div style={{ marginTop: 5, fontWeight: 900, fontSize:'calc(18px * var(--app-fs-scale))' }}>1 / 5 완료</div>
                 </div>
-                <div style={{ fontWeight: 900, color:'var(--app-primary-deep)', fontSize:'calc(22px * var(--app-fs-scale))' }}>{requiredPercent}%</div>
+                <div style={{ fontWeight: 900, color:'var(--app-primary-deep)', fontSize:'calc(22px * var(--app-fs-scale))' }}>20%</div>
               </div>
               <div className="bar" style={{ marginTop: 12, background:'rgba(255,255,255,0.72)' }}>
-                <i style={{ width: `${requiredPercent}%` }}/>
+                <i style={{ width:'20%' }}/>
               </div>
               <div style={{ marginTop: 14, display:'flex', gap: 10 }}>
                 <div style={{ flex: 1, padding: 11, borderRadius:'var(--app-r-s)', background:'rgba(255,255,255,0.7)' }}>
                   <div className="t-xs">다음 추천</div>
-                  <div style={{ marginTop: 3, fontWeight: 850, fontSize:'calc(14px * var(--app-fs-scale))' }}>
-                    {isRequiredComplete ? '선택 삶공부' : '생명언어의 삶'}
-                  </div>
+                  <div style={{ marginTop: 3, fontWeight: 850, fontSize:'calc(14px * var(--app-fs-scale))' }}>생명언어의 삶</div>
                 </div>
                 <div style={{ flex: 1, padding: 11, borderRadius:'var(--app-r-s)', background:'rgba(255,255,255,0.7)' }}>
                   <div className="t-xs">수강 기준</div>
-                  <div style={{ marginTop: 3, fontWeight: 850, fontSize:'calc(14px * var(--app-fs-scale))' }}>
-                    {isRequiredComplete ? '관심 분야별 선택' : '생명의 삶 이후 가능'}
-                  </div>
+                  <div style={{ marginTop: 3, fontWeight: 850, fontSize:'calc(14px * var(--app-fs-scale))' }}>생명의 삶 이후 가능</div>
                 </div>
               </div>
               <div className="t-xs" style={{ marginTop: 11 }}>
-                {isRequiredComplete
-                  ? '필수 과정을 모두 마쳤어요. 이제 부부, 부모, 일터, 기도처럼 삶의 자리별 선택 과정을 볼 수 있어요.'
-                  : '필수 과정을 순서대로 이어가면 다음 삶공부를 신청할 수 있어요.'}
+                필수 과정을 순서대로 이어가면 다음 삶공부를 신청할 수 있어요.
               </div>
               <div style={{ marginTop: 12, display:'grid', gap: 8 }}>
-                {isRequiredComplete && (
-                  <button
-                    data-preview-ui
-                    className="btn btn-primary"
-                    style={{ width:'100%', justifyContent:'center' }}
-                    onClick={() => setCourseTab('optional')}
-                  >
-                    선택 삶공부 둘러보기
-                  </button>
-                )}
                 <button className="btn btn-soft" style={{ width:'100%', justifyContent:'center' }}>수강 내역 보기</button>
               </div>
             </div>
